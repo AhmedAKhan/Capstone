@@ -1,0 +1,4 @@
+Potential things to work on
+- User based calibration: User does some hand gestures to calibrate the program to their movement patterns
+- Gesture/Pattern mapping: Some sort of documentation on each gesture and its expected pattern (2d graph for each gesture)
+- Preprocessing: Look into different preprocessing methods used by others to filter noise from data (i.e. we require somewhat consistent patterns to be able to recognize one gesture from another)
