@@ -1,0 +1,5 @@
+SRS - Sign Talk
+
+- Description
+Sign Language is the only means of communication for people with hearing disabilities. Unfortunately, the average person is not able to understand this form of language. This causes a communication barrier and makes it difficult for people who use Sign Language to perform daily activities like everyone else.
+Sign Talk will act as an on the go interpreter for people who communicate through Sign Language. It will decipher the sEMG signals from their hand motions and output the interpretation in English.

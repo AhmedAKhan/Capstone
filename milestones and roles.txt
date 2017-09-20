@@ -1,0 +1,19 @@
+Milestones
+- Getting the hardware working on our laptops - End of September
+- Completed project structure - End of September
+	- Well defined descriptions of each component and how they interact with each other
+- Gather unprofessional data - Mid October
+- Functional preprocessing and feature extraction (includes video components) - Mid November
+- Functional model (outputs a letter/word) (includes video components) - Mid November
+- Gathering professional data from experiments (video and emg) - End of November
+- Refine each component to be perfect based on professional data  - End of December
+- Get application working online (requires "Data splitter" component) - End of January
+
+Roles
+- Video analysis (quantify sign language data) - ahmed
+	- Pictures vs. Video frames
+- Cleaning data from device (figure out the preprocessing and feature extraction methods needed to clean raw emg data)
+- Machine learning model training
+- Implement the controller
+- Data splitter implementation
+- Leader - ahmed
