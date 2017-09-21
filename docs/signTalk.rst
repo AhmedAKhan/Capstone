@@ -3,7 +3,6 @@
 Sign Talk 
 **********
 
-
 stuff about sign talk
 
 Components
