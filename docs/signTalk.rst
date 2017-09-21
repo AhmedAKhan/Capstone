@@ -5,13 +5,11 @@ Sign Talk
 
 stuff about sign talk
 
-Components
-==========
-
 .. toctree::
     :maxdepth: 3
     :caption: Contents:
     
+    signTalk/controller
     signTalk/firmware
     signTalk/data
     signTalk/preprocess

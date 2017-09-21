@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# slr documentation build configuration file, created by
+# SignTalk documentation build configuration file, created by
 # sphinx-quickstart on Wed Sep 13 21:40:00 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -18,8 +18,10 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import sys
-# sys.path.insert(0, os.path.abspath('.'))
-sys.path.append('../src/')
+import os
+sys.path.insert(0, os.path.abspath('.'))
+# sys.path.append('../signTalk/')
+# sys.path.append('../signTalkRGB/')
 
 
 # -- General configuration ------------------------------------------------
@@ -50,7 +52,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'slr'
+project = 'SignTalk'
 copyright = '2017, Saim, Ahmed, Sergio'
 author = 'Saim, Ahmed, Sergio'
 
@@ -119,7 +121,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'slrdoc'
+htmlhelp_basename = 'SignTalkdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -146,7 +148,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'slr.tex', 'slr Documentation',
+    (master_doc, 'SignTalk.tex', 'SignTalk Documentation',
      'Saim, Ahmed, Sergio', 'manual'),
 ]
 
@@ -156,7 +158,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'slr', 'slr Documentation',
+    (master_doc, 'SignTalk', 'SignTalk Documentation',
      [author], 1)
 ]
 
@@ -167,8 +169,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'slr', 'slr Documentation',
-     author, 'slr', 'One line description of project.',
+    (master_doc, 'SignTalk', 'SignTalk Documentation',
+     author, 'SignTalk', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -13,6 +13,6 @@ class InitializationTests(unittest.TestCase):
         Ensure the test suite can import our module
         """
         try:
-            import src
+            import signTalk
         except ImportError:
             self.fail("Was not able to import the src")

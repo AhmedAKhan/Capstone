@@ -1,6 +1,6 @@
 
 **********************
-Sign Talk using camera
+Sign Talk rgb
 **********************
 
 some info about that
