@@ -3,17 +3,28 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+maybe try this theme https://github.com/crate/crate-docs-theme
+
+
 Welcome to slr's documentation!
 ===============================
 
-this is hte documentation page, hallooooo
-import main
 
+import main
 .. autofunction:: main.add
 
+Sign Talk RGB
+=============
+
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
+
+   intro
+   pipeline
+   signTalk
+   signTalkRGB
+   test
 
 
 
