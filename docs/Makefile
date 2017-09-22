@@ -4,13 +4,22 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = python3 -msphinx
-SPHINXPROJ    = slr
-SOURCEDIR     = .
-BUILDDIR      = _build
+SPHINXPROJ    = SignTalk
+SOURCEDIR     = source
+BUILDDIR      = build
 
 # Put it first so that "make" without argument is like "make help".
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+gen:
+	sphinx-apidoc -o . ..
+
+removegen:
+	rm docs/source/signTalk.rst
+	rm docs/source/signTalkVideo.rst
+	rm docs/source/setup.rst
+	rm docs/source/tests.rst
 
 .PHONY: help Makefile
 
