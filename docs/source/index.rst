@@ -10,10 +10,11 @@ Welcome to SignTalk's documentation!
   :maxdepth: 2
   :caption: Contents:
 
-  setup
+  pipeline
   signTalk
   signTalkVideo
-  tests
+  test_suite
+  setup
 
 
 Indices and tables

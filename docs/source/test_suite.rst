@@ -41,11 +41,11 @@ integration tests + unit tests
 ummm TODO
 
 
+Implementation
+==============
+
+.. toctree::
+
+  tests.rst
 
 
-
-
-.. import signTalk.main
-
-
-asdasd .. autofunction:: signTalk.main.add
