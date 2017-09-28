@@ -13,13 +13,13 @@ help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 gen:
-	sphinx-apidoc -o . ..
+	sphinx-apidoc -o source ..
 
 removegen:
-	rm docs/source/signTalk.rst
-	rm docs/source/signTalkVideo.rst
-	rm docs/source/setup.rst
-	rm docs/source/tests.rst
+	rm source/signTalk.rst
+	rm source/signTalkVideo.rst
+	rm source/setup.rst
+	rm source/tests.rst
 
 .PHONY: help Makefile
 

@@ -1,6 +1,18 @@
 signTalk package
 ================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    signTalk.classify
+    signTalk.data
+    signTalk.feature
+    signTalk.filter
+    signTalk.model
+    signTalk.split
+
 Submodules
 ----------
 
