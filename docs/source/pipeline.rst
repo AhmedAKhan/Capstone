@@ -7,7 +7,7 @@ Pipeline
 This is the flow of how data moves through the app until it concludes with the recognition.
 
 
-Firmware --> Data --> Parser -->  Split --> Feature --> Filter --> Model --> Output
+Firmware --> Data --> Parser -->  Split --> Feature --> Filter --> Classifier --> Output
 
 **Firmware**
 The firmware is the part of the code that exists on the hardware to funciton. 
@@ -29,11 +29,11 @@ of size "width". This will allow the classifier to only need to deal with input 
 same size
 
 **Feature**
-This module will take in the data and return the features extracted from this model.
+Thi module will take in the data and return the features extracted from this model.
 The model takes in a list of values of type enum 'feature.type'. and return an object
 feature_model with those features
 
-**Model**
+**Classifier**
 This will be the code that is responsible for sign language recognition. 
 It will take in the features and return the category it belongs to
 
