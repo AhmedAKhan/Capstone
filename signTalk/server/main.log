@@ -9,3 +9,58 @@ WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 192-757-369
 INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 14:05:32] "GET /test HTTP/1.1" 200 -
 INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 14:05:32] "GET /favicon.ico HTTP/1.1" 404 -
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+INFO:werkzeug: * Running on http://127.0.0.1:4000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 177-481-279
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 14:51:15] "GET /test HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 14:51:15] "GET /favicon.ico HTTP/1.1" 404 -
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+INFO:werkzeug: * Running on http://127.0.0.1:4000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 177-481-279
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 15:52:07] "GET /test HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 15:57:19] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 15:57:19] "GET /static/index.html HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 15:57:19] "GET /favicon.ico HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 15:57:26] "GET /test HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 15:58:11] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 15:59:27] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 15:59:47] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 15:59:52] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:00:46] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:02:01] "GET /test HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:02:32] "GET /test HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:03:10] "GET /test HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:04:27] "GET /test HTTP/1.1" 200 -
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+INFO:werkzeug: * Running on http://127.0.0.1:4000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 177-481-279
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:07:07] "GET /test HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:07:27] "GET /test HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:32:57] "GET /test HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:33:23] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:34:05] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:34:42] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:34:53] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:36:15] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:36:26] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:37:08] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:46:13] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:47:51] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:48:04] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:49:58] "GET /test/ HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 16:50:51] "GET /test HTTP/1.1" 200 -
