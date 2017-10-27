@@ -1,11 +1,40 @@
-INFO:root:this is from the recommend file
-INFO:root:this is from the tango file
-INFO:root:this is from the emg blueprint file
-INFO:werkzeug: * Running on http://127.0.0.1:4000/ (Press CTRL+C to quit)
-INFO:werkzeug: * Restarting with fsevents reloader
 INFO:root:this is from the tango file
 INFO:root:this is from the emg blueprint file
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 192-757-369
-INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 14:05:32] "GET /test HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [26/Oct/2017 14:05:32] "GET /favicon.ico HTTP/1.1" 404 -
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 192-757-369
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 192-757-369
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 192-757-369
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 192-757-369
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/models.py', reloading
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 192-757-369
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/main.py', reloading
+INFO:werkzeug: * Detected change in '/Users/arifjamil/Documents/school/capstone/proj/signTalk/alg/algorithm.py', reloading
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 192-757-369

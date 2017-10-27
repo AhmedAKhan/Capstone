@@ -3,14 +3,15 @@ import flask
 import logging
 
 tango = Blueprint('tango', __name__,
-                        template_folder='templates',
-                        url_prefix='/tango')
+  template_folder='templates',
+  url_prefix='/tango')
 
 logging.info("this is from the tango file");
 
-@tango.route('/saveData')
+@tango.route('/save')
 def saveData():
   print("This should save data")
+  return "saved the data"
 
 @tango.route('/offline/rec')
 def rec_offline():
@@ -19,8 +20,8 @@ def rec_offline():
 
 @tango.route('/online/rec')
 def rec_online():
-  print("vanity url: ", vanity_url)
   vanityurl = request.args.get('vanityurl') # get url requests
-  result = {"steamid":steamid, "success":True};
+  result = {"steamid":9898, "success":True};
   return flask.jsonify(**result)
+
 
