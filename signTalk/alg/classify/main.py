@@ -1,5 +1,5 @@
 
-import classify.HMM as HMM
+from . import HMM
 
 classifier_all = {
   "hmm": HMM

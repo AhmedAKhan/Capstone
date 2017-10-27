@@ -1,7 +1,7 @@
 
-from classify.main import classify
-from feature.extract import extract as feature_extract
-from models import models_all
+from .classify.main import classify
+from .feature.extract import extract as feature_extract
+from .models import models_all
 
 def recognize(data, offline=True, model_type="tango"):
   model = models_all[model_type]

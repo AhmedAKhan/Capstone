@@ -1,9 +1,9 @@
 
-import feature.hog as hog
-# import feature.handDetection as handDetection
+from . import hog
+# from . import hand_detection
 
 feature_all = {
-  # "handDetection": handDetection,
+  # hand_detection": hand_detection,
   "hog": hog
 }
 
