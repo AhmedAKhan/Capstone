@@ -2,3 +2,4 @@
 **.pyc
 **/__pycache__
 docs/build/
+signTalk/server/main.log

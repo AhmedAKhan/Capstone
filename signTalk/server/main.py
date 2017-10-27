@@ -1,5 +1,5 @@
 import logging
-from flask import Flask, send_from_directory, redirect
+from flask import Flask, send_from_directory, redirect, jsonify
 
 import os
 cwd = os.getcwd()
@@ -29,7 +29,7 @@ for blueprint in all_blueprints:
 
 @app.route('/test')
 def testPage():
-  return "test response was good :)"
+  return jsonify("test response was good :)")
 
 # this is the main route
 @app.route('/')
