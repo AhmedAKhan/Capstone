@@ -1,9 +1,12 @@
+import sys
+sys.path.append("..")
+
 import logging
 from flask import Flask, send_from_directory, redirect, jsonify
 
-import os
-cwd = os.getcwd()
-print("cwd: " + cwd)
+# import os
+# cwd = os.getcwd()
+# print("cwd: " + cwd)
 
 from server.extensions import app
 
