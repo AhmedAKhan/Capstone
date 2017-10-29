@@ -22,10 +22,10 @@ def saveData():
   formatErrors = validate.json_route(data, route=request.path)
   if(formatErrors != None):
     return flask.jsonify(**formatErrors)
-  letter = data.get('letter',"?")
+  letter = data.get('letter',"unknown")
 
   ## save the data
-  success = save(data['frames'], letter)
+  success = save(data, letter)
 
   print("send a success as a response")
   result = getSuccessResponse()
