@@ -81,17 +81,18 @@ def rec_online_disconnect():
   ## send response
   return getSuccessResponse()
 
-@tango.route('/online/rec')
+@tango.route('/online/rec', methods=['POST'])
 def rec_online():
   data = request.json
 
   ## validate input
-  formatErrors = validate.json_route(data, route="tango/online/rec")
+  formatErrors = validate.json_route(data, route=request.path)
   if(formatErrors != None):
     return flask.jsonify(**formatErrors)
 
   ## run alg
-  session.data(data)
+  result = session.data(data['sessionID'], data)
+  if(result != None): return flask.jsonify(**result)
 
   ## return response
   return flask.jsonify(success=False, responseCode=506, message="Feature not implemented :(")
