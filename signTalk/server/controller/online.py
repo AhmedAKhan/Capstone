@@ -45,7 +45,7 @@ def data(sessionID, data):
   responseCode = 200
   if(not res): responseCode = 203
 
-  logging.info("total_duration: " + )
+  logging.info("total_duration: " + session['total_duration'])
   while (session['total_duration'] - session['frame_intervals'][0] > save_time):
     _remove_data(sessionID)
 
