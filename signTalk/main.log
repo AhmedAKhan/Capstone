@@ -1,0 +1,9 @@
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+INFO:werkzeug: * Running on http://127.0.0.1:4000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with fsevents reloader
+INFO:root:this is from the tango file
+INFO:root:this is from the emg blueprint file
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 192-757-369
+INFO:werkzeug:127.0.0.1 - - [29/Oct/2017 21:12:02] "POST /tango/save HTTP/1.1" 500 -
