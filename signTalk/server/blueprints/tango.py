@@ -4,9 +4,9 @@ import logging
 from .utils import getSuccessResponse
 
 from alg.algorithm import recognize
-from controller.dataset import save
-import controller.validate as validate
-import controller.online as session
+from ..controller.dataset import save
+from ..controller import validate
+from ..controller import online as session
 
 tango = Blueprint('tango', __name__,
   template_folder='templates',
@@ -61,7 +61,7 @@ def rec_online_connect():
   return flask.jsonify(
     success=True,
     message="",
-    responseCode=0,
+    responseCode=200,
     sessionID=sessionID
   )
 
@@ -73,10 +73,11 @@ def rec_online_disconnect():
       success=False,
       responseCode=404,
       message="sessionID not passed in as url parameter"
-    )
+    ), 404
 
   ## disconect from user
-  session.close(sessionID)
+  result = session.close(sessionID)
+  if(result != None): return flask.jsonify(**result), result['responseCode']
 
   ## send response
   return getSuccessResponse()
@@ -84,6 +85,7 @@ def rec_online_disconnect():
 @tango.route('/online/rec', methods=['POST'])
 def rec_online():
   data = request.json
+  sessionID = request.args.get('sessionID')
 
   ## validate input
   formatErrors = validate.json_route(data, route=request.path)
@@ -91,8 +93,9 @@ def rec_online():
     return flask.jsonify(**formatErrors)
 
   ## run alg
-  result = session.data(data['sessionID'], data)
-  if(result != None): return flask.jsonify(**result)
+  result = session.data(sessionID, data)
+  print("result: ", result)
+  if(result != None): return flask.jsonify(**result[0]), result[1]
 
   ## return response
   return flask.jsonify(success=False, responseCode=506, message="Feature not implemented :(")

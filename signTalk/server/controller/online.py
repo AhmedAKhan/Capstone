@@ -5,7 +5,8 @@ from alg.algorithm import recognize
 
 
 sessions = {}
-save_time = utils.getConfigValue('online', 'save_time')
+save_time = int(utils.getConfigValue('online', 'save_time'))
+print("save_time: " , save_time, " type: ", type(save_time))
 
 
 def _default_session():
@@ -28,8 +29,14 @@ def create():
 
 def close(sessionID):
   logging.info("closing the session with id: " + sessionID)
+  if(sessionID not in sessions):
+    return {
+      "success": False,
+      "message": "the sessionID " + sessionID + " does not exist",
+      "responseCode":404
+    }
   sessions.pop(sessionID, None)
-  return
+  return None
 
 
 def data(sessionID, data):
@@ -39,19 +46,29 @@ def data(sessionID, data):
       "success":False,
       "message":"sessionID is not a valid session, current sessions are " + str(sessions.keys()),
       "responseCode": 404
-    }
+    }, 404
   session = sessions[sessionID]
   res = _add_data(sessionID, data)
   responseCode = 200
-  if(not res): responseCode = 203
+  if(not res): responseCode = 203 ## missing frame
 
-  logging.info("total_duration: " + session['total_duration'])
+  logging.info("total_duration: " , session['total_duration'])
   while (session['total_duration'] - session['frame_intervals'][0] > save_time):
     _remove_data(sessionID)
 
   ## run the alg
   result = _run_alg(sessionID)
-  return result, responseCode
+  if(type(result) == Exception):
+    return {"success":False, "message":str(result), "responseCode":501}, 501
+
+  response = {
+    "success":True,
+    "message":"",
+    "responseCode":200,
+    "letter":result
+  }
+  return response, responseCode
+
 def _add_data(sessionID, data):
   logging.info("add_data 1. adding the new data to session")
   session = sessions[sessionID]
@@ -62,6 +79,7 @@ def _add_data(sessionID, data):
     session['frame_intervals'].append(data['interval'])
     session['total_duration'] += data['interval']
     session['frame_counts'].add(data['frame_id'])
+    print("added to session, session: ", session)
     return True
 
   ## missed frame data

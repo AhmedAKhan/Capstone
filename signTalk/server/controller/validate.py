@@ -3,7 +3,9 @@ import os
 
 def json_route(data, route):
   print("current working directory: " + os.getcwd())
-  with open("./samples" + route + ".json") as data_file:
+  path = "./samples/" + route + ".json"
+  if(not os.path.exists(path)): path = "./server/samples/"+route+".json"
+  with open(path) as data_file:
     sample = json.load(data_file)
     return compare_jsons(data, sample)
 

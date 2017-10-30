@@ -10,4 +10,5 @@ def getConfigObject():
 
 
 def getConfigValue(category, param):
+    print("category: " + category + " param: " + param)
     return config[category][param]

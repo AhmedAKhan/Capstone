@@ -6,9 +6,9 @@ They shall be imported by ----
 """
 
 #from flask import Blueprint
-from blueprints.tango import tango
-from blueprints.emg import emg
-from blueprints.test import test
+from .tango import tango
+from .emg import emg
+from .test import test
 
 
 all_blueprints = (tango, emg, test)

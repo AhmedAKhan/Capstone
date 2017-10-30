@@ -3,7 +3,7 @@ import flask
 def getSuccessResponse():
   return flask.jsonify(
     success=True,
-    responseCode=0,
+    responseCode=200,
     message=""
   )
 
