@@ -2,6 +2,7 @@ import json
 import os
 
 def json_route(data, route):
+  """ compares the data dictionary object with the expected value from route """
   print("current working directory: " + os.getcwd())
   path = "./samples/" + route + ".json"
   if(not os.path.exists(path)): path = "./server/samples/"+route+".json"
@@ -11,7 +12,18 @@ def json_route(data, route):
     return compare_jsons(data, sample)
 
 
+
 def compare_jsons(data, sample, path=""):
+  """ compares data with sample to ensure all the keys in sample exist in data
+        Also checks if the values for each key have the same types
+
+    :param data: object to validate
+    :type data: dict
+    :param sample: example of how the object should be
+    :type sample: dict
+    :returns: bool of if the data object is valid
+    :raises: AttributeError, KeyError
+  """
   if(type(data) == list):
     num = 0
     for element in data:

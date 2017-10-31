@@ -11,7 +11,11 @@ test = Blueprint('test', __name__,
   url_prefix='/test')
 
 @test.route('/<path:route>', methods=['POST'])
-def fallback(route):
+def test_route(route):
+  """ handles the test route
+    :param str: route is the url after the base, This file will validate that the
+    input is as expected, and then return an example response
+  """
   print("starting /test/ route: ", route)
   if(route != None):
     data = request.json

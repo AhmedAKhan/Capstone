@@ -16,6 +16,7 @@ logging.info("this is from the tango file");
 
 @tango.route('/save', methods=['POST'])
 def saveData():
+  """ flask route function, post request take in a sample example and will save it """
   data = request.json
 
   ## validate input
@@ -38,6 +39,9 @@ def saveData():
 
 @tango.route('/offline/rec', methods=['POST'])
 def rec_offline():
+  """ This is a post request, take an example data and will return
+      the letter it corresponds with
+  """
   data = request.json
 
   ## validate input
@@ -67,6 +71,7 @@ def rec_online_connect():
 
 @tango.route('/online/disconnect')
 def rec_online_disconnect():
+  """ This will take in a session id and close that session"""
   sessionID = request.args.get('sessionID')
   ## validate
   if(sessionID == None): return flask.jsonify(
@@ -84,6 +89,10 @@ def rec_online_disconnect():
 
 @tango.route('/online/rec', methods=['POST'])
 def rec_online():
+  """ This function will take in the data for a given interval,
+      based on storing the last intervals. It will return if the
+      last n seconds was a valid letter
+  """
   data = request.json
   sessionID = request.args.get('sessionID')
 

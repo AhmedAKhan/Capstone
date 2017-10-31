@@ -10,6 +10,7 @@ print("save_time: " , save_time, " type: ", type(save_time))
 
 
 def _default_session():
+  """ creates a default empty session when a user calls connect """
   return {
     "frames":[],
     "frame_intervals":[],
@@ -18,6 +19,7 @@ def _default_session():
     "total_duration":0
   }
 def create():
+  """ creates a new session, and generates a unique key for the user """
   while(True):
     my_id = str(uuid.uuid4())
     if(my_id not in sessions):
@@ -28,6 +30,7 @@ def create():
 
 
 def close(sessionID):
+  """ closes the session with sessionID """
   logging.info("closing the session with id: " + sessionID)
   if(sessionID not in sessions):
     return {
@@ -40,6 +43,7 @@ def close(sessionID):
 
 
 def data(sessionID, data):
+  """ sessionID has recoreded new information data, adjust session info """
   ## store the data that was passed in, store the last save_time secs
   if(sessionID not in sessions):
     return {
@@ -70,6 +74,7 @@ def data(sessionID, data):
   return response, responseCode
 
 def _add_data(sessionID, data):
+  """ adds data to the session data object """
   logging.info("add_data 1. adding the new data to session")
   session = sessions[sessionID]
   if(data['frame_id'] > session['latest_frame']):
@@ -91,6 +96,7 @@ def _add_data(sessionID, data):
   session['frame_counts'].add(data['frame_id'])
   return False
 def _remove_data(sessionID):
+  """ removes data from the session data object """
   logging.info("removing data at the end")
   session = sessions[sessionID]
   session['frame_counts'].remove(session['latest_frame'] - len(session['frames']))
@@ -100,6 +106,7 @@ def _remove_data(sessionID):
   return
 
 def _run_alg(sessionID):
+  """ This function calls the algorithm to figure out the letter of the last values """
   session = sessions[sessionID]
   ## flatten the frames list
   data = [item for sublist in session['frames'] for item in sublist]
