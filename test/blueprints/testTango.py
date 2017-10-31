@@ -12,7 +12,7 @@ class TangoTest(unittest.TestCase):
 
     def test_save_route(self):
         """ check if /save responds with 200, and saves the file"""
-        obj = json.load(open('./server/samples/tango/save.json', 'r'))
+        obj = json.load(open('./signTalk/server/samples/tango/save.json', 'r'))
         response = self.app.post(
             base+'/save',
             data=json.dumps(obj),
@@ -68,7 +68,7 @@ class TangoTest(unittest.TestCase):
         print("response_data: ", response_data)
         sessionID = response_data['sessionID']
 
-        obj = json.load(open('./server/samples/tango/online/rec.json', 'r'))
+        obj = json.load(open('./SignTalk/server/samples/tango/online/rec.json', 'r'))
         res = self.app.post(
             base+'/online/rec',
             query_string=dict(sessionID=sessionID),

@@ -5,6 +5,7 @@ def json_route(data, route):
   print("current working directory: " + os.getcwd())
   path = "./samples/" + route + ".json"
   if(not os.path.exists(path)): path = "./server/samples/"+route+".json"
+  if(not os.path.exists(path)): path = "./SignTalk/server/samples/"+route+".json"
   with open(path) as data_file:
     sample = json.load(data_file)
     return compare_jsons(data, sample)
