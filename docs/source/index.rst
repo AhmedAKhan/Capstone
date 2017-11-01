@@ -11,6 +11,7 @@ Welcome to SignTalk's documentation!
   :caption: Contents:
 
   flask_routes
+  test_suite
 
 
 

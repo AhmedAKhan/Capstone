@@ -1,11 +1,5 @@
 
-flask
-=====
-
-.. autoflask:: autoflask_sampleapp:server
-   :undoc-static:
-
-.. http:post:: /tango/save
+.. http:post:: /tango/online/rec
 
    The request will take the data sent and save it to be used for training later
 
