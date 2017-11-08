@@ -6,8 +6,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestService {
 
-    // This URL will have to be changed every time since python server is currently running on localhost
-    private static final String BASE_URL = "http://9125174e.ngrok.io/";
+    // 10.0.2.2 is used for emulator to connect to localhost
+    private static final String BASE_URL = "http://10.0.2.2:4000/";
 
     private FlaskApi flaskApi;
 
