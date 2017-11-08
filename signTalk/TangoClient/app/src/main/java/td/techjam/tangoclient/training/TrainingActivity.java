@@ -1,11 +1,11 @@
-package td.techjam.tangoclient;
+package td.techjam.tangoclient.training;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import td.techjam.tangoclient.R;
 
 public class TrainingActivity extends FragmentActivity implements LettersFragment.LetterItemClickListener {
 
