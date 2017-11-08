@@ -11,9 +11,9 @@ import td.techjam.tangoclient.R;
 public class LettersAdapter extends RecyclerView.Adapter<LettersAdapter.LettersViewHolder> {
 
     private char[] letters;
-    private LettersFragment.LetterItemClickListener letterItemClickListener;
+    private LetterItemClickListener letterItemClickListener;
 
-    public LettersAdapter(char[] letters, LettersFragment.LetterItemClickListener letterItemClickListener) {
+    public LettersAdapter(char[] letters, LetterItemClickListener letterItemClickListener) {
         this.letters = letters;
         this.letterItemClickListener = letterItemClickListener;
     }
