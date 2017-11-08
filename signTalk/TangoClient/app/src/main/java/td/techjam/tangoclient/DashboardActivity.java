@@ -32,7 +32,7 @@ public class DashboardActivity extends BaseNetworkActivity {
     }
 
     public void onTrainClicked(View view) {
-        NavigationManager.startTraining(this);
+        NavigationManager.startLettersActivity(this);
     }
 
     public void onOfflineClicked(View view) {

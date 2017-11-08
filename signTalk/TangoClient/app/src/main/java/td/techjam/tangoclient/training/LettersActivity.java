@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import td.techjam.tangoclient.NavigationManager;
 import td.techjam.tangoclient.R;
 
 public class LettersActivity extends AppCompatActivity implements LetterItemClickListener {
@@ -40,7 +41,6 @@ public class LettersActivity extends AppCompatActivity implements LetterItemClic
 
     @Override
     public void onLetterClicked(String letter) {
-        Toast.makeText(this, String.format("Letter %s clicked", letter), Toast.LENGTH_SHORT)
-            .show();
+        NavigationManager.startTrainingActivity(this, letter);
     }
 }

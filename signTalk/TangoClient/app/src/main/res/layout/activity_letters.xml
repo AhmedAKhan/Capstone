@@ -6,16 +6,11 @@
     tools:context="td.techjam.tangoclient.training.LettersActivity">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Choose a Letter"
-        android:textSize="18sp" />
+        style="@style/title"
+        android:text="Choose a Letter" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_letters"
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
