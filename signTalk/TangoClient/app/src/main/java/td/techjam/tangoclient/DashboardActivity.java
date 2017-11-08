@@ -5,15 +5,20 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DashboardActivity extends BaseNetworkActivity {
 
-    private TextView tvTestResponse;
+    @BindView(R.id.tv_test_response)
+    TextView tvTestResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        tvTestResponse = (TextView) findViewById(R.id.tv_test_response);
+        // Boilerplate code needed for ButterKnife to work
+        ButterKnife.bind(this);
     }
 
     @Override

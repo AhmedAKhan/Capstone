@@ -9,13 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import td.techjam.tangoclient.R;
 
 public class LettersFragment extends Fragment {
 
     private final char[] LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     private final int NUM_COLS = 4;
-    private RecyclerView lettersRecyclerView;
+
+    @BindView(R.id.rv_letters)
+    RecyclerView lettersRecyclerView;
 
     public LettersFragment() {
         // Required empty public constructor
@@ -24,7 +28,9 @@ public class LettersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_letters, container, false);
-        lettersRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_letters);
+
+        // Boilerplate code needed for ButterKnife to work
+        ButterKnife.bind(this, rootView);
 
         initView();
         return rootView;
