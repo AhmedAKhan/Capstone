@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Training Activity -->
+    <color name="colorStart">@android:color/holo_green_dark</color>
+    <color name="colorStop">@android:color/holo_red_dark</color>
+    <color name="colorSave">@android:color/holo_blue_light</color>
+    <color name="colorReset">@android:color/holo_red_light</color>
+
 </resources>
