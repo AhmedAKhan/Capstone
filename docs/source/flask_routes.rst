@@ -2,8 +2,16 @@
 flask
 =====
 
-.. autoflask:: autoflask_sampleapp:server
+documenting using the yaml file
+
+.. openapi:: specs/openapi.yaml
+
+documenting using normal comments 
+
+.. autoflask:: server.main:app
    :undoc-static:
+
+custom documentation written on the file
 
 .. http:post:: /tango/save
 

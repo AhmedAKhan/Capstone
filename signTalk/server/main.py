@@ -1,6 +1,8 @@
 ## to allow the server starter code to be in the server folder
+import os
 import sys
-sys.path.append("..")
+#sys.path.append("..")
+sys.path.insert(0, os.path.abspath('..'))
 
 import logging
 from flask import Flask, send_from_directory, redirect, jsonify
