@@ -24,49 +24,44 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onTrainClicked"
-        android:text="Train" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onTrainClicked"
+            android:text="Train" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Recognize"
-        android:textSize="32sp" />
+        <TextView
+            style="@style/title"
+            android:text="Recognize" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:onClick="onOfflineClicked"
-        android:text="Offline" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onOfflineClicked"
+            android:text="Offline" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:onClick="onOnlineClicked"
-        android:text="Online" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:onClick="onOnlineClicked"
+            android:text="Online" />
 
-    <Button
-        android:id="@+id/btn_test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:onClick="onTestClicked"
-        android:text="Test" />
+        <Button
+            android:id="@+id/btn_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:onClick="onTestClicked"
+            android:text="Test" />
 
-    <TextView
-        android:id="@+id/tv_test_response"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:gravity="center"
-        android:text="(Response to test)" />
+        <TextView
+            android:id="@+id/tv_test_response"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:text="(Response to test)" />
 
     </LinearLayout>
 </RelativeLayout>

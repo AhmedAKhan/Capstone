@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="td.techjam.tangoclient.TrainingActivity">
+    tools:context="td.techjam.tangoclient.training.TrainingActivity">
 
-    <FrameLayout
-        android:id="@+id/frame_letters"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_letter"
+        style="@style/title"
+        android:text="N/A" />
 
 </RelativeLayout>

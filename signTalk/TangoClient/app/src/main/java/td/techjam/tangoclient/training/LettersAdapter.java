@@ -1,18 +1,19 @@
-package td.techjam.tangoclient;
+package td.techjam.tangoclient.training;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+
+import td.techjam.tangoclient.R;
 
 public class LettersAdapter extends RecyclerView.Adapter<LettersAdapter.LettersViewHolder> {
 
     private char[] letters;
-    private LettersFragment.LetterItemClickListener letterItemClickListener;
+    private LetterItemClickListener letterItemClickListener;
 
-    public LettersAdapter(char[] letters, LettersFragment.LetterItemClickListener letterItemClickListener) {
+    public LettersAdapter(char[] letters, LetterItemClickListener letterItemClickListener) {
         this.letters = letters;
         this.letterItemClickListener = letterItemClickListener;
     }
