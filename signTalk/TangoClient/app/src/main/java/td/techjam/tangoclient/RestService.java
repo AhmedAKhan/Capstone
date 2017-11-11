@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RestService {
 
     // This URL will have to be changed every time since python server is currently running on localhost
-    private static final String BASE_URL = "http://4f86c335.ngrok.io/";
+    private static final String BASE_URL = "http://9125174e.ngrok.io/";
 
     private FlaskApi flaskApi;
 
