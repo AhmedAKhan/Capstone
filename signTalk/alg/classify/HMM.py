@@ -1,5 +1,7 @@
 
 
+def setup():
+    return
 
 def classify(data):
     print("doing some shit")
