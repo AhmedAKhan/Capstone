@@ -11,7 +11,9 @@ def save(data, letter="unknown"):
   if(not os.path.isdir(path)):
     os.makedirs(path)
 
-  path += "/" + datetime.now().isoformat()
+  name = datetime.now().isoformat()
+  name = name.replace(":", "_")
+  path += "/" + name
   with open(path, 'w') as outfile:
     json.dump(data, outfile)
   return True

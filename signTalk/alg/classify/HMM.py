@@ -11,12 +11,12 @@ Output: Probability of ( State x | Observation y1, y2, .. yt)
 
 So our observations has to be quantifiable.
 
-In our problem, we have a video device attempting to recognize 
-hand gestures.  The observation is hand-gesture, which can be 
-measured or quantified by looking at the position of reference 
-points.  Our time can be referenced as "frames" which the 
-recording device captured.  And our objective is to find the 
-probability that, given a sequence of the observed hand-gestures, 
+In our problem, we have a video device attempting to recognize
+hand gestures.  The observation is hand-gesture, which can be
+measured or quantified by looking at the position of reference
+points.  Our time can be referenced as "frames" which the
+recording device captured.  And our objective is to find the
+probability that, given a sequence of the observed hand-gestures,
 it matches an existing hand-gesture (such as the letter K).
 
 The data is going to be parsed by the filter and the feature.
