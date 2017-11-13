@@ -29,6 +29,37 @@ import numpy as np
 from hmmlearn import hmm
 np.random.seed(42)
 
+class HMM(Model):
+  def __init__(self):
+    self.name = "hmm"
+    self.batch_size = batch_size
+    self.outputs = 2
+    self.learning_rate = 0.001
+    self.num_outputs = 3
+
+    self.build_model()
+    return
+  def build_model(self):
+    """ builds the model to train on """
+    remodel = hmm.GaussianHMM(n_components=8, covariance_type="full")
+
+  def train_model(self, data_collector, num_steps=1000, save_path=None):
+    #@# TODO
+    pass
+  def run_train_step(self, dataset):
+    """ train one step """
+    ### TODO
+    pass
+  def print_model_info(self, dataset, step=0):
+    ## TODO
+    pass
+
+  def classify(self, input_data):
+    prediction = remodel.predict(input_data)
+    return prediction
+
+
+
 #begin script
 def classify(probMat, transMat, meanMat, covariance):
 	#8 components represent the channels?
