@@ -35,23 +35,62 @@ class HMM(Model):
     self.batch_size = batch_size
     self.outputs = 2
     self.learning_rate = 0.001
+    self.num_inputs=26
     self.num_outputs = 3
+
 
     self.build_model()
     return
   def build_model(self):
     """ builds the model to train on """
-    remodel = hmm.GaussianHMM(n_components=8, covariance_type="full")
+    self.model = hmm.GaussianHMM(n_components=8, covariance_type="full")
 
-  def train_model(self, data_collector, num_steps=1000, save_path=None):
-    #@# TODO
-    pass
-  def run_train_step(self, dataset):
-    """ train one step """
-    ### TODO
-    pass
-  def print_model_info(self, dataset, step=0):
+  def run_steps(self, data_collector, num_steps=1000):
+    data = []
+    for data, res in data_collector:
+
+      row = data + res
+      data.append(row)
+
+    self.model.fit(data)
+
+
+  def train_model(self, data_collector, num_steps=1000, save_path=None, num_models=5):
     ## TODO
+    max_score = 0
+    best_model=None
+
+
+    for i in range(num_models):
+      self.model = hmm.GaussianHMM(n_components=self.num_inputs, covariance_type="full", n_iter=num_steps)
+      self.model.startprob_ = np.array(np.random.rand(1, self.num_inputs))
+      run_steps(data_collector, num_steps)
+
+      score = self.print_model_info(data_collector)
+
+      if score > best_score:
+        best_score = score
+        best_model = self.model
+
+    self.model = best_model
+    
+  def print_model_info(self, data_collector):
+    ## TODO
+    data = []
+    for data, res in data_collector:
+
+      row = data + res
+      data.append(row)
+
+    info = self.model.score(data)
+    print(info)
+    return info
+
+  def save_model(self):
+    ## todo
+    pass
+  def load_model(self):
+    ## todo
     pass
 
   def classify(self, input_data):
