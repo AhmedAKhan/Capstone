@@ -36,6 +36,8 @@ class SVM(Model):
     self.outputs = 2
     self.learning_rate = 0.001
     self.num_outputs = 3
+
+    self.build_model()
     return
   def build_model(self):
     """ builds the model to train on """
@@ -101,15 +103,20 @@ class SVM(Model):
   def _create_feed_dict(self, dataset):
     """ creates the dictionary """
     return {
-      self.x_data: rand_x,
-      self.y_target: rand_y,
-      self.prediction_grid:rand_x
+      # self.x_data: rand_x,
+      # self.y_target: rand_y,
+      # self.prediction_grid:rand_x
+
+      self.x_data: dataset.x,
+      self.y_target: dataset.y,
+      self.prediction_grid: dataset.x
     }
   def _create_placeholders(self):
     """ create the placeholders  """
-    self.x_data = tf.placeholder(shape=[None, 2], dtype=tf.float32)
+    num_parameters = 2
+    self.x_data = tf.placeholder(shape=[None, num_parameters], dtype=tf.float32)
     self.y_target = tf.placeholder(shape=[self.num_outputs, None], dtype=tf.float32)
-    self.prediction_grid = tf.placeholder(shape=[None, 2], dtype=tf.float32)
+    self.prediction_grid = tf.placeholder(shape=[None, num_parameters], dtype=tf.float32)
   def _create_variables(self):
     """ create trainable variables """
     self.weights = tf.Variable(tf.random_normal(shape=[self.num_outputs, self.batch_size]))
@@ -120,7 +127,10 @@ class SVM(Model):
     v2 = tf.reshape(v1, [3, batch_size, 1])
     return(tf.matmul(v2, v1))
 
-  def classify(self): pass
+  def classify(self, input_data):
+    feed_dict = {self.x_data: input_data}
+    [prediction] = self.tf_sess(self.prediction, feed_dict)
+    return prediction
 
 def gen_plot(model):
   # Create a mesh to plot points in
