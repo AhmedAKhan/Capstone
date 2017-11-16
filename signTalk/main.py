@@ -1,24 +1,33 @@
+"""
+    This module will control the overall flow of the program,
+    Takes in the input (leap, emg) and an output (gui, command-line) and
+    will gather informatino from the necessary source and display it in the appropriate manor
 
-def add(num1, num2, num3=0):
-    """
-        This is an add method docstring
+"""
+import client.leap
+import client.emg
+input_all = {
+    "tango": client.leap,
+    "emg": client.emg
+}
 
-        it adds some numbers together
+import client.gui
+import client.cl
+output_all = {
+    "gui": client.gui,
+    "cl": client.cl
+}
 
-        :param int num1: an integer you want to add
-        :param int num2: another integer you want to add
-        :param int num3: another integer you want to add which is optional
+import queue.Queue
+
+def main(inputDevice, outputDevice="cl"):
+    """  """
+    my_input = input_all[inputDevice]
+    output = output_all[outputDevice]
+    sharedMemoryQueue = queue.Queue()
+
+    my_input.setup()
+    output.start(my_input, sharedMemoryQueue)
 
 
-        this function adds two numbers together
-    """
-    return num1 + num2 + num3
 
-
-def main():
-    """ this is the main function, it does nothing """
-    print("this is the main function")
-
-
-if __name__ == '__main__':
-    main()
