@@ -4,20 +4,8 @@
     will gather informatino from the necessary source and display it in the appropriate manor
 
 """
-import client.leap
-import client.emg
-input_all = {
-    "tango": client.leap,
-    "emg": client.emg
-}
-
-import client.gui
-import client.cl
-output_all = {
-    "gui": client.gui,
-    "cl": client.cl
-}
-
+import client.input_all as input_all
+import client.output_all as output_all
 import queue.Queue
 
 def main(inputDevice, outputDevice="cl"):
