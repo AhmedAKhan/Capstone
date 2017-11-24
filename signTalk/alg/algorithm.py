@@ -12,6 +12,7 @@ def setup(models):
 
 def recognize(data, offline=True, model_type="tango"):
   model = models_all[model_type]
+  # print("models_all: ", models_all)
   result = []
   result = feature_extract(model["feature"], data)
   # if(not offline): result = filters(model["filters"], result)
@@ -27,4 +28,4 @@ def test(dataset, model_type="emg"):
   return ""
 
 ### setup the models when the file loads
-setup(["tango", "emg"])
+# setup(["tango", "emg"])

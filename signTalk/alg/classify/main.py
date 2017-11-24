@@ -9,7 +9,7 @@ classifier_all = {
 
 classifiers_loaded = {}
 
-def setup(models):
+def setup_classifier(models):
   load_path = None ## get option from config file
   for model_name in models:
     model = classifier_all[model_name]()
