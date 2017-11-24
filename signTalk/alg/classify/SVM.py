@@ -36,6 +36,7 @@ class SVM(Model):
     self.outputs = 2
     self.learning_rate = 0.001
     self.num_outputs = 3
+    Model.__init__(self, self.name)
 
     self.build_model()
     return
