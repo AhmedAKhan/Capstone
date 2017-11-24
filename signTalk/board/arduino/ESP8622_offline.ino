@@ -1,18 +1,7 @@
-/*
- * Transparent WiFi to UART Server. 
- * WiSeR Lab
- * 
- * Author: Ala Shaabana
+/** Transparent WiFi to UART Server. 
  */
 
 #include <ESP8266WiFi.h>
-
-// Shedden Lab
-//const char* ssid = "xtrms";
-//const char* password = "xtremis1";
-
-//const char* ssid = "wisergroup";
-//const char* password = "cr0ssc0de";
 
 const char* ssid = "SM-G930W82074";
 const char* password = "hhog9680";
@@ -118,9 +107,7 @@ void loop() {
 
     //client.println("starting to read serial data");
     while (Serial.available() > 0){
-    //  Serial.write(Serial.read());
-      //client.write(Serial.read());
-      //client.write("print statement with client.write");
+      //  Serial.write(Serial.read());
       client.print("serial data: ");
       client.println(Serial.read());
     }
