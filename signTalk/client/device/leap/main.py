@@ -18,6 +18,7 @@ class LeapData():
     self.controller = Leap.Controller()
     self.queue = None
     self.options = self.getDefaultOptions()
+    self.name = "leap"
   def getDefaultOptions(self):
     return {
       "images":True,

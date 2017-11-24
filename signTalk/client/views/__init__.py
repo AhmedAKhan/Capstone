@@ -1,5 +1,5 @@
-from .cli import CLI
+from .cli.main import CLI_View
 
 all_views = {
-    "cli": CLI
+    "CLI": CLI_View
 }

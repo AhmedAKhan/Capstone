@@ -7,6 +7,7 @@ class EmgData():
         self.queue = None
         self.listener = Listener()
         self.options = self.getDefaultOptions()
+        self.name = "emg"
     def getDefaultOptions(self):
         return {}
     def start(self, newQueue, newOptions=None):

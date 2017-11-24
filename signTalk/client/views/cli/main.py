@@ -4,14 +4,15 @@
   to console
 """
 
+class CLI_View():
+    def __init__(self, controller):
+        self.controller = controller
+        return
+    def start(): pass
 
 def printIntro():
     print("Starting program .... ")
     print("instructions may be given with the command help")
-
-commands = {
-    "help":
-}
 
 def processInput(command):
     command = command.lstrip()
@@ -33,4 +34,4 @@ def start(input_source, queue, save=False):
 
 
 
-main()
+# main()
