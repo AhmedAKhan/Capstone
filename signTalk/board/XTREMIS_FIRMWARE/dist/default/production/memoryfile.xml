@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project>                                  
+  <executable name="dist/default/production/XTREMIS_FIRMWARE.production.elf">                 
+    <memory name="program">                 
+      <units>bytes</units>                 
+      <length>122880</length>                 
+      <used>97756</used>                     
+      <free>25124</free>                     
+    </memory>                              
+    <memory name="data">              
+      <units>bytes</units>                 
+      <length>32768</length>                 
+      <used>11680</used>                     
+      <free>21088</free>                     
+    </memory>                              
+  </executable>                            
+</project>                                 
