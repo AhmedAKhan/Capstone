@@ -5,9 +5,12 @@ from .models import models_all
 
 print("inside the algorithm part ")
 
-def setup(models):
+def setup(model_names):
   ## setup the files
-  setup_classifier(models)
+  classifier_names = []
+  for name in model_names:
+    classifier_names += models_all[name]['classifier']
+  setup_classifier(classifier_names)
   return
 
 def recognize(data, offline=True, model_type="tango"):

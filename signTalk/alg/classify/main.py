@@ -1,6 +1,6 @@
 
 from . import HMM
-from . import SVM
+from .svm import SVM
 
 classifier_all = {
   "hmm": HMM,
@@ -10,8 +10,9 @@ classifier_all = {
 classifiers_loaded = {}
 
 def setup_classifier(models):
-  load_path = None ## get option from config file
+  load_model = None ## get option from config file
   for model_name in models:
+    print("model_name: ", model_name)
     model = classifier_all[model_name]()
     model.build_model()
     if(load_model != None): model.load_model(load_path)
@@ -25,6 +26,3 @@ def classify(model_type, data):
     raise Exception("The classify model_type " + str(model_type) + " is not a valid option")
 
   return classifier_loaded[model_type].classify(data)
-
-
-

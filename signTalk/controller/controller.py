@@ -17,7 +17,7 @@ class Controller():
         self.queue = None
         self.recording = False
 
-        alg.setup(device.name)
+        alg.setup([device.name])
         return
 
     ## return a record object containing the info recording for the given duration
@@ -79,9 +79,9 @@ class Controller():
             when the result is found, response['value'] will be given the result
         """
         self.rec_start()
-        self.sw = Sliding_Window()
-        self.sw.recognize_live(response, self.queue, alg.recognize)
+        self.sliding_window = Sliding_Window()
+        self.sliding_window.recognize_live(response, self.queue, alg.recognize)
     def recognize_online_stop(self):
         """ stop the live recognition """
-        self.sw.stop()
-        self.sw = None
+        self.sliding_window.stop()
+        self.sliding_window = None

@@ -23,7 +23,7 @@ The data is going to be parsed by the filter and the feature.
 
 '''
 
-print(__doc__)
+# print(__doc__)
 
 import numpy as np
 from hmmlearn import hmm
