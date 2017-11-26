@@ -7,10 +7,8 @@ import queue
 import time
 import pickle
 
-import online
-
 import alg.algorithm as alg
-from online import Sliding_Window
+from .online import Sliding_Window
 
 
 class Controller():
