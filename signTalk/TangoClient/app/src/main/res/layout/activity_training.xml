@@ -11,4 +11,16 @@
         style="@style/title"
         android:text="N/A" />
 
+    <td.techjam.tangoclient.TwoButtonView
+        android:id="@+id/bottom_buttons"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <td.techjam.tangoclient.HorizontalProgressBarView
+        android:id="@+id/progress_bar_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_buttons" />
+
 </RelativeLayout>
