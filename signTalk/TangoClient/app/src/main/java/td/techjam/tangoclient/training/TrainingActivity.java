@@ -55,9 +55,6 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
 
     @Override
     public void leftButtonClicked() {
-//        bottomButtons.setTwoButton("Save", "Reset");
-//        bottomButtons.setLeftColor(R.color.colorSave);
-//        bottomButtons.setRightColor(R.color.colorReset);
         presenter.singleButtonClicked();
     }
 
