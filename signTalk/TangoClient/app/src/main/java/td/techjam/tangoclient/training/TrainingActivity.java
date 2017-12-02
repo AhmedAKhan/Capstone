@@ -55,12 +55,17 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
 
     @Override
     public void leftButtonClicked() {
-        presenter.singleButtonClicked();
+        TwoButtonView.STATE bottomButtonsState = bottomButtons.getState();
+        if (bottomButtonsState == TwoButtonView.STATE.SINGLE_BUTTON) {
+            presenter.singleButtonClicked();
+        } else {
+            presenter.dualButtonClicked(true);
+        }
     }
 
     @Override
     public void rightButtonClicked() {
-        Toast.makeText(this, "Right", Toast.LENGTH_SHORT).show();
+        presenter.dualButtonClicked(false);
     }
 
     @Override
@@ -77,19 +82,32 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     }
 
     @Override
-    public void startTimer() {
-        progressBarTimer.setStatus("Recording...");
+    public void startRecording() {
         timerTask = new TimerTask();
         timerTask.execute();
-        Log.d(TAG, "start timer");
+        Log.d(TAG, "start recording");
     }
 
     @Override
-    public void stopTimer() {
-        progressBarTimer.setStatus("Cancelled");
+    public void stopRecording() {
         timerTask.cancel(true);
+        Log.d(TAG, "stop recording");
+    }
+
+    @Override
+    public void saveRecording() {
+        Toast.makeText(this, "SAVE", Toast.LENGTH_SHORT).show();
+        // make save REST call
+    }
+
+    @Override
+    public void updateRecordingStatus(String status) {
+        progressBarTimer.setStatus(status);
+    }
+
+    @Override
+    public void resetRecordingProgress() {
         progressBarTimer.setProgress(0);
-        Log.d(TAG, "stop timer");
     }
 
     class TimerTask extends AsyncTask<Void, Integer, Void> {

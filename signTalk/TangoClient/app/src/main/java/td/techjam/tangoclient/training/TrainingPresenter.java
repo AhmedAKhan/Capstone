@@ -6,7 +6,7 @@ import td.techjam.tangoclient.R;
 
 public class TrainingPresenter {
 
-    enum ButtonState {
+    private enum ButtonState {
         START, STOP, SAVE_RESET
     }
 
@@ -16,10 +16,6 @@ public class TrainingPresenter {
     TrainingPresenter(TrainingView view) {
         this.view = view;
         view.updateOneButton(buttonState.toString(), getLeftButtonColor());
-    }
-
-    ButtonState getButtonState() {
-        return buttonState;
     }
 
     void singleButtonClicked() {
@@ -33,23 +29,46 @@ public class TrainingPresenter {
             default:
                 break;
         }
+    }
 
-        view.updateOneButton(buttonState.toString(), getLeftButtonColor());
+    void dualButtonClicked(boolean left) {
+        if (left) {
+            saveClicked();
+        } else {
+            resetClicked();
+        }
     }
 
     void onRecordingFinished() {
         buttonState = ButtonState.SAVE_RESET;
+        updateRecordingStatus("Recording Completed");
         view.updateTwoButton("Save", "Reset", getLeftButtonColor(), getRightButtonColor());
     }
 
     private void startClicked() {
         buttonState = ButtonState.STOP;
-        view.startTimer();
+        view.updateOneButton("STOP", getLeftButtonColor());
+        view.startRecording();
+        updateRecordingStatus("Recording in progress...");
     }
 
     private void stopClicked() {
         buttonState = ButtonState.START;
-        view.stopTimer();
+        view.updateOneButton("START", getLeftButtonColor());
+        view.stopRecording();
+        view.resetRecordingProgress();
+        updateRecordingStatus("Recording Cancelled");
+    }
+
+    private void saveClicked() {
+        view.saveRecording();
+    }
+
+    private void resetClicked() {
+        buttonState = ButtonState.START;
+        view.updateOneButton("START", getLeftButtonColor());
+        view.resetRecordingProgress();
+        resetRecordingStatus();
     }
 
     private @ColorRes int getLeftButtonColor() {
@@ -67,5 +86,13 @@ public class TrainingPresenter {
 
     private @ColorRes int getRightButtonColor() {
         return buttonState == ButtonState.SAVE_RESET ? R.color.colorReset : 0;
+    }
+
+    private void updateRecordingStatus(String status) {
+        view.updateRecordingStatus(status);
+    }
+
+    private void resetRecordingStatus() {
+        view.updateRecordingStatus("");
     }
 }

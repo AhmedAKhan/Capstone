@@ -14,6 +14,10 @@ import butterknife.ButterKnife;
 
 public class TwoButtonView extends LinearLayout {
 
+    public enum STATE {
+        SINGLE_BUTTON, DUAL_BUTTON
+    }
+
     @BindView(R.id.btn_left)
     TextView leftButton;
 
@@ -21,6 +25,7 @@ public class TwoButtonView extends LinearLayout {
     TextView rightButton;
 
     private TwoButtonClickListener twoButtonClickListener;
+    private STATE state = STATE.SINGLE_BUTTON;
 
     public TwoButtonView(Context context) {
         super(context);
@@ -77,14 +82,20 @@ public class TwoButtonView extends LinearLayout {
     }
 
     public void setOneButton(String text) {
+        state = STATE.SINGLE_BUTTON;
         leftButton.setText(text);
         rightButton.setVisibility(GONE);
     }
 
     public void setTwoButton(String textLeft, String textRight) {
+        state = STATE.DUAL_BUTTON;
         leftButton.setText(textLeft);
         rightButton.setVisibility(VISIBLE);
         rightButton.setText(textRight);
+    }
+
+    public STATE getState() {
+        return state;
     }
 
     public interface TwoButtonClickListener {
