@@ -1,10 +1,7 @@
-proj
-====
+server
+======
 
 .. toctree::
    :maxdepth: 4
 
-   setup
-   signTalk
-   signTalkVideo
-   tests
+   server

@@ -13,7 +13,6 @@ optionally rednose can be installed to get the colored output
     
     pip3 install nose2
     pip3 install coverage
-    pip3 install green ## optional
 
 Usage
 =====
@@ -22,9 +21,7 @@ to run the testers in the root of the project run the command the signTalk can b
 
 .. code-block:: bash
 
-  nosetests -v --with-coverage --cover-package=signTalk \
-              --cover-inclusive --cover-erase tests
-  green tests -r # alternerative
+  nose2 -v -t "./signTalk/" -s ./test
 
 
 You will get an output with all the test cases which passed and failed,
@@ -39,13 +36,5 @@ explain testing
 
 integration tests + unit tests
 ummm TODO
-
-
-Implementation
-==============
-
-.. toctree::
-
-  tests.rst
 
 

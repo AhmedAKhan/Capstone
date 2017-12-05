@@ -1,10 +1,11 @@
+## to allow the server starter code to be in the server folder
+import os
+import sys
+#sys.path.append("..")
+sys.path.insert(0, os.path.abspath('..'))
+
 import logging
 from flask import Flask, send_from_directory, redirect, jsonify
-
-import os
-cwd = os.getcwd()
-print("cwd: " + cwd)
-
 from server.extensions import app
 
 app.config.from_object(__name__)
@@ -26,14 +27,15 @@ for blueprint in all_blueprints:
 
 # -------------------- add blueprints  ------------------------------
 
-
 @app.route('/test')
 def testPage():
+  """ This is used for testing, just returns a string """
   return jsonify("test response was good :)")
 
 # this is the main route
 @app.route('/')
 def mainPage():
+  """ this is the main route if someone tries to access it """
   return "this is the main page /"
 
 
