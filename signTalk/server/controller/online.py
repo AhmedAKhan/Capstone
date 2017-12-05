@@ -1,7 +1,7 @@
 import logging
 import uuid
-import server.utils as utils
-from alg.algorithm import recognize
+from .. import utils as utils
+from ...alg import classify
 
 
 sessions = {}

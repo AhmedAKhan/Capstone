@@ -3,7 +3,7 @@ import flask
 import logging
 from .utils import getSuccessResponse
 
-from alg.algorithm import recognize
+from ...alg.algorithm import recognize
 from ..controller.dataset import save
 from ..controller import validate
 from ..controller import online as session
