@@ -1,24 +1,16 @@
+"""
+    This function will initialize the controller, GUI, and Input device,
+    and connect them together.
+"""
 
-def add(num1, num2, num3=0):
-    """
-        This is an add method docstring
+from controller import Controller
+from client.device import all_devices
+from client.views import all_views
 
-        it adds some numbers together
+def start(view_name, device_name):
+    """ takes the name of the view and device you wand and starts the app """
+    device = all_devices[device_name]()
+    controller = Controller(device)
+    view = all_views[view_name](controller)
 
-        :param int num1: an integer you want to add
-        :param int num2: another integer you want to add
-        :param int num3: another integer you want to add which is optional
-
-
-        this function adds two numbers together
-    """
-    return num1 + num2 + num3
-
-
-def main():
-    """ this is the main function, it does nothing """
-    print("this is the main function")
-
-
-if __name__ == '__main__':
-    main()
+start("CLI", "EMG")
