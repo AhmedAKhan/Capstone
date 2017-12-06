@@ -17,8 +17,12 @@ class EmgData():
         if(newOptions != None): self.options = newOptions
         self.listener.connect()
         self.listener.start()
+    def sed_data(self):
+        self.listener.sendData("b")
+    def sed_stop(self):
+        self.listener.sendData("s")
     def stop(self):
-        self.listener.running = True
+        self.listener.running = False
 
 
 class Listener(threading.Thread):
@@ -28,6 +32,8 @@ class Listener(threading.Thread):
         self.queue = None
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.running = True
+        self.cur_data = {"raw":""}
+        self.sending_command = False
         threading.Thread.__init__(self)
 
     def connect(self):
@@ -42,12 +48,28 @@ class Listener(threading.Thread):
     def sendData(self, data):
         if(data):
             self.sock.sendall(data.encode())
+    def parse_data(self, raw_data):
+        raw_data = raw_data.decode('ascii')
+        raw_data = raw_data.strip()
+        data = None
+        if(len(raw_data) >= 10): return data
+        if(raw_data == '65'):
+            self.sending_command = True
+            self.cur_data = {"raw":""}
+            return data
+        if(self.sending_command):
+            if( raw_data == '192'):
+                data = self.cur_data
+                self.sending_command = False
+            else: self.cur_data['raw'] += str(raw_data) + ','
+
+        return data
     def run(self):
         while self.running:
-            print("listening for data . . . . ")
-            data = self.sock.recv(1024)
-            print("data: ", data)
-            self.queue.put(data)
+            raw_data = self.sock.recv(4096)
+            data = self.parse_data(raw_data)
+            print("listening for data . . . . ", data, " raw: ", raw_data)
+            if(data != None): self.queue.put(data)
 
 
 if __name__ == '__main__':
@@ -55,9 +77,16 @@ if __name__ == '__main__':
     import time
     mem = queue.Queue()
     stream = EmgData()
+    print("startig the stream")
     stream.start(mem)
+    time.sleep(10)
+    print("sedig the data to start streami`g")
+    # stream.sed_data()
 
     time.sleep(10)
-    stream.stop()
+    print("sedig to stop streami`g")
+    stream.sed_stop()
+    time.sleep(10)
     print("mem size: ", mem.qsize())
+    stream.stop()
 
