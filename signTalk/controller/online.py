@@ -2,7 +2,7 @@
 import threading
 import time
 
-import alg.algorithm as alg
+from ..alg import algorithm as alg
 
 class Sliding_Window(threading.Thread):
     def __init__(self, **options):

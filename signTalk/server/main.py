@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 import logging
 from flask import Flask, send_from_directory, redirect, jsonify
-from server.extensions import app
+from .extensions import app
 
 app.config.from_object(__name__)
 
@@ -19,7 +19,7 @@ app.config.update(dict(
 
 
 # -------------------- add blueprints ------------------------------
-from server.blueprints.blueprints import all_blueprints
+from .blueprints.blueprints import all_blueprints
 
 ## all the urls with the prefix /rev will be handles by the recommend blueprint
 for blueprint in all_blueprints:

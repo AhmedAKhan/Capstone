@@ -107,11 +107,13 @@ void loop() {
 
     //client.println("starting to read serial data");
     while (Serial.available() > 0){
-      //  Serial.write(Serial.read());
-      client.print("serial data: ");
-      client.println(Serial.read());
+      Serial.println(Serial.read());
+      //client.println(Serial.read());
+      
+      //  client.print("serial data: ");
+      //client.write(Serial.read());
     }
-    //client.flush();
+    client.flush();
   }
 }
 
