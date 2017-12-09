@@ -27,8 +27,8 @@ class EmgData():
 
 class Listener(threading.Thread):
     def __init__(self, **opts):
-        self.host = opts.get('host', "192.168.43.50")
-        # self.host = opts.get('host', "192.168.43.119")
+        # self.host = opts.get('host', "192.168.43.50")
+        self.host = opts.get('host', "192.168.43.100")
         self.port = opts.get('port', 9999)
         self.queue = None
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -49,27 +49,23 @@ class Listener(threading.Thread):
     def sendData(self, data):
         if(data):
             self.sock.sendall(data.encode())
-    def parse_data(self, raw_data):
-        raw_data = raw_data.decode('ascii')
-        raw_data = raw_data.strip()
+    def segment_data(self, raw_data):
+        if(raw_data == b'\xC0'): print("in the if statement")
         data = None
-        if(len(raw_data) >= 10): return data
-        if(raw_data == '65'):
-            self.sending_command = True
-            self.cur_data = {"raw":""}
-            return data
-        if(self.sending_command):
-            if( raw_data == '192'):
-                data = self.cur_data
-                self.sending_command = False
-            else: self.cur_data['raw'] += str(raw_data) + ','
-
+        if(raw_data == b'\xc0'):
+            data = self.cur_data
+            self.cur_data = {"raw":''}
+        else: self.cur_data['raw'] += str(raw_data) + ','
         return data
+    def parse_data(self, raw_data):
+        return raw_data
     def run(self):
         while self.running:
             raw_data = self.sock.recv(4096)
-            data = self.parse_data(raw_data)
-            print("listening for data . . . . ", data, " raw: ", raw_data)
+            segmented_data = self.segment_data(raw_data)
+            print("listening for data . . . . ", data, " raw: ", raw_data, "seg: ", segmented_data)
+            if(segmented_data == None): continue
+            data = self.parse_data(segmented_data)
             if(data != None): self.queue.put(data)
 
 
