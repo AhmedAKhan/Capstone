@@ -25,6 +25,8 @@ def test_route(route):
 
   print("route is equal to " + route)
   path = "./samples/" + route +"_resp.json"
+  if(not os.path.exists(path)): path = "./server/samples/"+route+"_resp.json"
+  if(not os.path.exists(path)): path = "./SignTalk/server/samples/"+route+"_resp.json"
   if(not os.path.exists(path)):
     result = {
       "success":False,
