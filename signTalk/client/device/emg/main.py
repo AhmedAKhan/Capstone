@@ -28,6 +28,7 @@ class EmgData():
 class Listener(threading.Thread):
     def __init__(self, **opts):
         self.host = opts.get('host', "192.168.43.50")
+        # self.host = opts.get('host', "192.168.43.119")
         self.port = opts.get('port', 9999)
         self.queue = None
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -81,7 +82,7 @@ if __name__ == '__main__':
     stream.start(mem)
     time.sleep(10)
     print("sedig the data to start streami`g")
-    # stream.sed_data()
+    stream.sed_data()
 
     time.sleep(10)
     print("sedig to stop streami`g")
