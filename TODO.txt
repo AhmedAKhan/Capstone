@@ -1,0 +1,18 @@
+
+-> generator ???
+-> progress??
+-> more specific time lines
+  -> when the controller
+  -> data module
+  -> parser module
+  -> split module
+  ->
+
+
+analysis module
+  -> confusion matrix
+  -> roc curve
+  -> training vs test accuracy over number of training steps
+  -> training steps vs accuracy
+
+

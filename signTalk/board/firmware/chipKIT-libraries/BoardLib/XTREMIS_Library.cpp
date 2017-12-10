@@ -54,7 +54,6 @@ void XTREMIS_Library::beginDebug(void) {
 
     sniffMode = true;
 
-    
     if (Serial1) {
         if (started) {
             Serial1.println("Board up");
@@ -403,7 +402,6 @@ boolean XTREMIS_Library::processChar(char character) {
                 board.setupTriggerPins();
                 Serial0.println("Trigger pins ready.");
                 break;
-                
             default:
                 return false;
         }
@@ -442,9 +440,8 @@ void XTREMIS_Library::accelWriteAxisData(void) {
 boolean XTREMIS_Library::boardBegin(void) {
     // Initialize the serial port baud rate
     Serial0.begin(XTREMIS_BAUD_RATE);
-  
   //  Serial1.begin(XTREMIS_BAUD_RATE);
-    
+
     pinMode(XTREMIS_PIN_LED, OUTPUT);
 //    pinMode(XTREMIS_PIN_PGC, OUTPUT);
 
@@ -474,7 +471,6 @@ void XTREMIS_Library::powerUpSequence(void){
 /**
 * @description: This is a function that is called once and confiures all pins on
 *                 the PIC32 uC
-* 
 */
 boolean XTREMIS_Library::boardBeginDebug(void) {
     // Initalize the serial port baud rate
@@ -526,6 +522,7 @@ void XTREMIS_Library::boardReset(void) {
     Serial0.print("On Board ADS1299 Device ID: 0x"); Serial0.println(ADS_getDeviceID(ON_BOARD),HEX);
     Serial0.print("LSM6DS0 Device ID: 0x"); Serial0.print(LSM6DS0_getDeviceID(),HEX); Serial0.println(" (Disabled for now)");
     Serial0.println("Firmware: v2.0.1"); 
+
     sendEOT();
 }
 
@@ -782,7 +779,6 @@ boolean XTREMIS_Library::isValidBoardType(char c) {
 
 void XTREMIS_Library::initialize(){
     pinMode(SD_SS,OUTPUT); digitalWrite(SD_SS,HIGH);  // de-select SDcard if present
-    
     pinMode(BOARD_ADS, OUTPUT); digitalWrite(BOARD_ADS,HIGH);
     pinMode(DAISY_ADS, OUTPUT); digitalWrite(DAISY_ADS,HIGH);
     pinMode(LSM6DS0_SS,OUTPUT); digitalWrite(LSM6DS0_SS,HIGH);
@@ -817,7 +813,7 @@ void XTREMIS_Library::initializeVariables(void) {
     streamPacketType = (char)XTREMIS_PACKET_TYPE_V3;
     verbosity = false; // when verbosity is true, there will be Serial feedback
 }
- 
+
 void XTREMIS_Library::printAllRegisters(){
     if(!isRunning){
         Serial0.println("\nBoard ADS Registers");
@@ -852,7 +848,6 @@ void XTREMIS_Library::sendChannelDataWithAccel(void)  {
     Serial0.write(XTREMIS_EOP_STND_ACCEL); // 0xC0
      * */
     sampleCounter++;
-
 }
 
 /**
@@ -1109,7 +1104,9 @@ void XTREMIS_Library::initialize_ads(){
     delay(40);
     resetADS(BOARD_ADS); // reset the on-board ADS registers, and stop DataContinuousMode
     delay(10);
+
     WREG(CONFIG1,NO_CLK_500SPS,BOARD_ADS); // turn off clk output and specify SPS
+
     delay(40);
 
 
@@ -1379,8 +1376,7 @@ void XTREMIS_Library::setChannelsToDefault(void){
 
 
   WREG(MISC1,0x00,BOARD_ADS);  // open SRB1 switch on-board
-  
-  
+
 }
 
 // void XTREMIS_Library::setChannelsToDefault(void){
@@ -1467,12 +1463,12 @@ void XTREMIS_Library::writeChannelSettings(){
       }
     } // end of CHnSET and BIAS settings
   } // end of board select loop
-  
+
     if(use_SRB1){
       for(int i=startChan; i<endChan; i++){
         channelSettings[i][SRB1_SET] = YES;
       }
-      
+
       WREG(MISC1,0x20,BOARD_ADS);     // close SRB1 swtich
       if(targetSS == BOARD_ADS){ boardUseSRB1 = true; }
 
@@ -1484,7 +1480,7 @@ void XTREMIS_Library::writeChannelSettings(){
       if(targetSS == BOARD_ADS){ boardUseSRB1 = false; }
 
     }
-  
+
 }
 
 // write settings for a SPECIFIC channel on a given ADS board
@@ -1611,7 +1607,7 @@ void XTREMIS_Library::activateChannel(byte N)
   }else{
     bitClear(setting,N-startChan);  // clear this channel's bit to remove from bias generation
   }
-  
+
   WREG(BIAS_SENSN,setting,targetSS); delay(1); //send the modified byte back to the ADS
 
   setting = 0x00;
@@ -1627,7 +1623,6 @@ void XTREMIS_Library::changeChannelLeadOffDetect()
 
   for(int b=0; b<2; b++){
     if(b == 0){ targetSS = BOARD_ADS; startChan = 0; endChan = 8; }
-    
 
     SDATAC(targetSS); delay(1);      // exit Read Data Continuous mode to communicate with ADS
     byte P_setting = RREG(LOFF_SENSP,targetSS);
@@ -1686,7 +1681,7 @@ void XTREMIS_Library::configureLeadOffDetection(byte amplitudeCode, byte freqCod
     byte setting, targetSS;
     for(int i=0; i<2; i++){
     if(i == 0){ targetSS = BOARD_ADS; }
-    
+
     setting = RREG(LOFF,targetSS); //get the current bias settings
     //reconfigure the byte to get what we want
     setting &= 0b11110000;  //clear out the last four bits
@@ -1798,7 +1793,6 @@ void XTREMIS_Library::configureLeadOffDetection(byte amplitudeCode, byte freqCod
  * @param `channelNumber` - [byte] - The channel you want to change
  * @param `pInput` - [byte] - Apply signal to P input, either ON (1) or OFF (0)
  * @param `nInput` - [byte] - Apply signal to N input, either ON (1) or OFF (0)
- 
  */
 // void XTREMIS_Library::leadOffSetForChannel(byte channelNumber, byte pInput, byte nInput) {
 
@@ -1849,7 +1843,6 @@ void XTREMIS_Library::configureLeadOffDetection(byte amplitudeCode, byte freqCod
  *                 See `.setleadOffForSS()` for complete description
  * @param `freqCode` - [byte] - The frequency of the impedance signal can be either.
  *                 See `.setleadOffForSS()` for complete description
- 
  */
 // void XTREMIS_Library::leadOffConfigureSignalForAll(byte amplitudeCode, byte freqCode)
 // {
@@ -1898,7 +1891,7 @@ void XTREMIS_Library::configureInternalTestSignal(byte amplitudeCode, byte freqC
     byte setting, targetSS;
     for(int i=0; i<2; i++){
         if(i == 0){ targetSS = BOARD_ADS;}
-        
+
         if (amplitudeCode == ADSTESTSIG_NOCHANGE) amplitudeCode = (RREG(CONFIG2,targetSS) & (0b00000100));
         if (freqCode == ADSTESTSIG_NOCHANGE) freqCode = (RREG(CONFIG2,targetSS) & (0b00000011));
         freqCode &= 0b00000011;  		//only the last two bits are used
@@ -2078,6 +2071,7 @@ void XTREMIS_Library::ADS_writeChannelData()
     for(int i=0; i<24; i++){
       Serial0.write(boardChannelDataRaw[i]);
       Serial0.print(',');
+
     }
 }
 
@@ -2341,8 +2335,6 @@ void XTREMIS_Library::initialize_accel(){
 	tmp |= LSM6DS0_XL_ZEN_ENABLE;
     
     LSM6DS0_write(CTRL_REG5_XL, tmp);
-
-    
     
     /*byte setting =  g | 0x08;           // mask the g range for REG4
     pinMode(LSM6DS0_DRDY,INPUT);   // setup dataReady interrupt from accelerometer
@@ -2501,7 +2493,7 @@ float XTREMIS_Library::LSM6DS0_getAccScale(void){
             break;
     }
     return sensitivity;
-    
+
 }
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<  END OF LSM6DS0 FUNCTIONS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -2769,11 +2761,13 @@ void XTREMIS_Library::resetLeadOffArrayToDefault(byte leadOffArray[][XTREMIS_NUM
  */
 void XTREMIS_Library::setupTriggerPins(){
     ANSELA = 0;             // All I/O digital on port A and B
+
     ANSELB = 0; 
     
     for(int i = 0; i < NUM_TRIG_PINS; i++){
         pinMode(trigger_pins[i], INPUT);
     }  
+
 }
 
 /*
@@ -2850,7 +2844,9 @@ void XTREMIS_Library::resetTriggers(){
  */
 String XTREMIS_Library::checkTrigger(){
     String trigger = "";
+
     if(triggerChanged()){         
+
         if(!keyPressed && !triggerReset()){        // key is pressed
         //    delay(5);
             keyPressed = true;
@@ -2859,8 +2855,7 @@ String XTREMIS_Library::checkTrigger(){
                 trigger = printLastTrigger();
             //    board.printLastTrigger();
                 printed = true;
-            }
-            
+            }            
         } else if(keyPressed){
          //   delay(5);
             keyPressed = false;

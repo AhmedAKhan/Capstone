@@ -5,10 +5,12 @@ default_emg = "emg_1"
 models_all = {
   "tango_1":{
     "feature":[],
+    "filters":[],
     "classifier":["hmm"]
   },
   "emg_1":{
     "feature":[],
+    "filters":[],
     "classifier":["svm"]
   }
 }

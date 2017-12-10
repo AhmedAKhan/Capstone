@@ -112,8 +112,7 @@ void setup() {
 }
 
 
-void loop() {
-    
+void loop() {    
      // put your main code here, to run repeatedly
     // Check for triggers
     if (board.streaming) {
@@ -136,6 +135,7 @@ void loop() {
                     board.accelUpdateAxisData();
                     addAccelToSD = true;
                 } 
+
              }
              // Verify the SD file is open
             if(SDfileOpen) {
@@ -384,7 +384,7 @@ void writeDataToSDcard(byte sampleNumber){
       }
     }
   }
-  
+
   // Time log
   // Convert time in milliseconds to HEX
   convertToHex(millis() - start_time, 5, addComma);
@@ -405,8 +405,6 @@ void writeDataToSDcard(byte sampleNumber){
     }
     addAccelToSD = false;  // reset addAccel
   }// end of accelerometer data log
-  
-   
 }
 
 
