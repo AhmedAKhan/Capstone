@@ -33,7 +33,7 @@ public abstract class ServiceCallback<T> implements Callback<T> {
         if (response.code() == 404 || response.body() == null) {
             callFailed(call, response);
         } else {
-            onSuccessfulResponse(response.body());
+            onSuccessfulResponse(response, response.body());
         }
     }
 
@@ -50,9 +50,9 @@ public abstract class ServiceCallback<T> implements Callback<T> {
         if (response != null) {
             Log.e(TAG, response.raw().toString());
         }
-        onFailure("Failed");
+        onFailure(response);
     }
 
-    abstract void onSuccessfulResponse(T response);
-    abstract void onFailure(String response);
+    abstract void onSuccessfulResponse(Response response, T body);
+    abstract void onFailure(Response response);
 }

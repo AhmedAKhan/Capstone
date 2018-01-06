@@ -47,13 +47,14 @@
             android:onClick="onOnlineClicked"
             android:text="Online" />
 
-        <Button
-            android:id="@+id/btn_test"
+        <TextView
+            style="@style/title"
+            android:text="Test Endpoints" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_test_endpoints"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:onClick="onTestClicked"
-            android:text="Test" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_test_response"
@@ -61,7 +62,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="8dp"
-            android:text="(Response to test)" />
+            android:text="(Response from server)" />
 
     </LinearLayout>
 </RelativeLayout>

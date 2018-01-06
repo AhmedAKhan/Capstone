@@ -1,17 +1,29 @@
 package td.techjam.tangoclient;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Response;
 
 public class DashboardActivity extends BaseNetworkActivity {
 
     @BindView(R.id.tv_test_response)
     TextView tvTestResponse;
+
+    @BindView(R.id.rv_test_endpoints)
+    RecyclerView rvTestEndpoints;
+
+    enum TestEndPoint {
+        TEST, SAVE
+    }
+
+    private RestService restService = new RestService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +31,34 @@ public class DashboardActivity extends BaseNetworkActivity {
 
         // Boilerplate code needed for ButterKnife to work
         ButterKnife.bind(this);
+
+        initTestEndPointsView();
+    }
+
+    private void initTestEndPointsView() {
+        TestEndPointsAdapter.TestEndPointClickListener testEndPointClickListener = new
+            TestEndPointsAdapter.TestEndPointClickListener() {
+            @Override
+            public void onClicked(TestEndPoint endpoint) {
+                switch (endpoint) {
+                    case TEST:
+                        restService.getTest(new TestCallback<String>(progressBar));
+                        break;
+                    case SAVE:
+                        restService.save(new TestCallback<GenericResponse>(progressBar));
+                        break;
+                    default:
+                        // shouldn't fire
+                        break;
+                }
+            }
+        };
+
+        TestEndPoint[] testEndPoints = new TestEndPoint[] { TestEndPoint.TEST, TestEndPoint.SAVE};
+        TestEndPointsAdapter adapter = new TestEndPointsAdapter(testEndPoints, testEndPointClickListener);
+        rvTestEndpoints.setHasFixedSize(true);
+        rvTestEndpoints.setLayoutManager(new LinearLayoutManager(this));
+        rvTestEndpoints.setAdapter(adapter);
     }
 
     @Override
@@ -43,25 +83,21 @@ public class DashboardActivity extends BaseNetworkActivity {
 
     }
 
-    public void onTestClicked(View view) {
-        RestService restService = new RestService();
-        restService.getTest(new TestCallback(progressBar));
-    }
-
-    class TestCallback extends ServiceCallback<String> {
+    class TestCallback<T> extends ServiceCallback<T> {
 
         TestCallback(ProgressBar progressBar) {
             super(progressBar);
         }
 
         @Override
-        void onSuccessfulResponse(String response) {
-            tvTestResponse.setText(response);
+        void onSuccessfulResponse(Response response, T body) {
+            tvTestResponse.setText(response.raw().toString());
         }
 
         @Override
-        void onFailure(String response) {
-            tvTestResponse.setText(response);
+        void onFailure(Response response) {
+            tvTestResponse.setText("Failed");
         }
     }
+
 }
