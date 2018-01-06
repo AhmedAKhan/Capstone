@@ -3,6 +3,9 @@ package td.techjam.tangoclient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import td.techjam.tangoclient.model.GenericResponse;
+import td.techjam.tangoclient.model.Resolution;
+import td.techjam.tangoclient.model.SaveRequest;
 
 public class RestService {
 

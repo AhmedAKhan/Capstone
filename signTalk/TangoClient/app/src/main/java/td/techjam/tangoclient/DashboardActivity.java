@@ -10,6 +10,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Response;
+import td.techjam.tangoclient.model.GenericResponse;
 
 public class DashboardActivity extends BaseNetworkActivity {
 

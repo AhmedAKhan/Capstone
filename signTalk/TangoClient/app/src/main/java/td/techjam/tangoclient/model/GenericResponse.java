@@ -1,4 +1,4 @@
-package td.techjam.tangoclient;
+package td.techjam.tangoclient.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
