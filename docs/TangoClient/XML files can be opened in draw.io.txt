@@ -1,0 +1,1 @@
+XML files can be opened in draw.io
