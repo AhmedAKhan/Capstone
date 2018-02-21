@@ -9,5 +9,4 @@ public interface TrainingView {
     void stopRecording();
     void saveRecording();
     void updateRecordingStatus(String status);
-    void resetRecordingProgress();
 }

@@ -43,6 +43,7 @@ public class TrainingPresenter {
         buttonState = ButtonState.SAVE_RESET;
         updateRecordingStatus("Recording Completed");
         view.updateTwoButton("Save", "Reset", getLeftButtonColor(), getRightButtonColor());
+        view.stopRecording();
     }
 
     private void startClicked() {
@@ -56,7 +57,6 @@ public class TrainingPresenter {
         buttonState = ButtonState.START;
         view.updateOneButton("START", getLeftButtonColor());
         view.stopRecording();
-        view.resetRecordingProgress();
         updateRecordingStatus("Recording Cancelled");
     }
 
@@ -67,7 +67,6 @@ public class TrainingPresenter {
     private void resetClicked() {
         buttonState = ButtonState.START;
         view.updateOneButton("START", getLeftButtonColor());
-        view.resetRecordingProgress();
         resetRecordingStatus();
     }
 

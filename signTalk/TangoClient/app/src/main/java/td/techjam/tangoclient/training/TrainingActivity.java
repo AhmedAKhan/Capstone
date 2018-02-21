@@ -1,5 +1,6 @@
 package td.techjam.tangoclient.training;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -14,7 +15,8 @@ import td.techjam.tangoclient.HorizontalProgressBarView;
 import td.techjam.tangoclient.R;
 import td.techjam.tangoclient.TwoButtonView;
 
-public class TrainingActivity extends FragmentActivity implements TwoButtonView.TwoButtonClickListener, TrainingView {
+public class TrainingActivity extends FragmentActivity implements TwoButtonView.TwoButtonClickListener, TrainingView,
+    TangoFragment.OnFragmentInteractionListener {
     private static final String TAG = TrainingActivity.class.getSimpleName();
     public static final String LETTER = "LETTER";
 
@@ -30,6 +32,7 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     private String letter;
     private TrainingPresenter presenter;
     private TimerTask timerTask;
+    private TangoFragment tangoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
         } else {
             letter = extras.getString(LETTER);
             initView();
+            initTangoFragment(savedInstanceState);
         }
     }
 
@@ -51,6 +55,31 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
         presenter = new TrainingPresenter(this);
         tvLetter.setText(letter);
         bottomButtons.setTwoButtonClickListener(this);
+    }
+
+    private void initTangoFragment(Bundle savedInstanceState) {
+        // Check that the activity is using the layout version with
+        // the fragment_container FrameLayout
+        if (findViewById(R.id.tango_fragment) != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            // Create a new Fragment to be placed in the activity layout
+            tangoFragment = new TangoFragment();
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+//            tangoFragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                .add(R.id.tango_fragment, tangoFragment).commit();
+        }
     }
 
     @Override
@@ -83,15 +112,16 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
 
     @Override
     public void startRecording() {
+        Log.d(TAG, "start recording");
         timerTask = new TimerTask();
         timerTask.execute();
-        Log.d(TAG, "start recording");
     }
 
     @Override
     public void stopRecording() {
-        timerTask.cancel(true);
         Log.d(TAG, "stop recording");
+        timerTask.cancel(true);
+        progressBarTimer.setProgress(0);
     }
 
     @Override
@@ -106,8 +136,8 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     }
 
     @Override
-    public void resetRecordingProgress() {
-        progressBarTimer.setProgress(0);
+    public void onFragmentInteraction(Uri uri) {
+        // TODO: Interact with Tango Fragment
     }
 
     class TimerTask extends AsyncTask<Void, Integer, Void> {
@@ -119,6 +149,7 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
         protected Void doInBackground(Void... voids) {
             while (progress < 100) {
                 try {
+                    // 1% of TOTAL_SECONDS in millis (i.e. TOTAL_SECONDS * 1000 / 100)
                     Thread.sleep(TOTAL_SECONDS * 10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -141,6 +172,7 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
         protected void onProgressUpdate(Integer... values) {
             int progress = values[0];
             progressBarTimer.setProgress(progress);
+            // TODO: When progress > 0, start saving data
         }
 
         @Override
