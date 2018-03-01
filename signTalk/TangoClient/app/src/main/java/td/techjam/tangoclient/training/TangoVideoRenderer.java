@@ -21,9 +21,10 @@ import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Environment;
-import android.util.Log;
 
 import com.projecttango.tangosupport.TangoSupport;
+
+import td.techjam.tangoclient.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,6 +36,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.Semaphore;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -69,12 +71,16 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
     private int width;
     private int height;
 
+    private int threadNum;
+    private Semaphore lock = new Semaphore(1);
+
     /**
      * A small callback to allow the caller to introduce application-specific code to be executed
      * in the OpenGL thread.
      */
     public interface RenderCallback {
         void preRender();
+        void postRender(int width, int height);
     }
 
     private FloatBuffer mVertex;
@@ -174,14 +180,16 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
         GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, mVbos[2]);
         GLES20.glDrawElements(GLES20.GL_TRIANGLE_STRIP, 4, GLES20.GL_UNSIGNED_SHORT, 0);
 
-//        Bitmap bitmap = savePixels(0, 0, width, height);
-//        Log.d("malik", String.format("Read %d pixels", (width * height)));
+//        byte[] rgbData = savePixels(0, 0, 25, 25);
+        mRenderCallback.postRender(width, height);
+
+//        Utils.LogD("malik", String.format("Read %d pixels", (width * height)));
 //        int color = bitmap.getPixel(0, 0);
 //        int a = (color >> 24) & 0xff; // or color >>> 24
 //        int r = (color >> 16) & 0xff;
 //        int g = (color >> 8) & 0xff;
 //        int b = (color) & 0xff;
-//        Log.d("malik", String.format("r:%d, g:%d, b:%d, a:%d", r, g, b, a));
+//        Utils.LogD("malik", String.format("r:%d, g:%d, b:%d, a:%d", r, g, b, a));
 //
 //        storeImage(bitmap);
 
@@ -249,8 +257,8 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
         int[] linked = new int[1];
         GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, linked, 0);
         if (linked[0] == 0) {
-            Log.e(TAG, "Could not link program");
-            Log.v(TAG, "Could not link program:" +
+            Utils.LogE(TAG, "Could not link program");
+            Utils.LogV(TAG, "Could not link program:" +
                 GLES20.glGetProgramInfoLog(program));
             GLES20.glDeleteProgram(program);
             return 0;
@@ -265,8 +273,8 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
         int[] compiled = new int[1];
         GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
         if (compiled[0] == 0) {
-            Log.e(TAG, "Could not compile shader");
-            Log.v(TAG, "Could not compile shader:" +
+            Utils.LogE(TAG, "Could not compile shader");
+            Utils.LogV(TAG, "Could not compile shader:" +
                 GLES20.glGetShaderInfoLog(shader));
             GLES20.glDeleteShader(shader);
             return 0;
@@ -278,51 +286,81 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
         return mTextures[0];
     }
 
-    private Bitmap savePixels(int x, int y, int w, int h) {
-        byte pixelData[] = new byte[w * h * 4];
-        int bitmapData[] = new int[w * h];
+    public void readPixelData(final int x, final int y, final int w, final int h,
+        final TangoFragment.OnFragmentInteractionListener listener) {
+//        final byte pixelData[] = new byte[w * h * 4];
+////        int bitmapData[] = new int[w * h];
+//        final ByteBuffer byteBuffer = ByteBuffer.wrap(pixelData);
+//        byteBuffer.position(0);
+
+        final byte pixelData[] = new byte[w * h * 4];
         ByteBuffer byteBuffer = ByteBuffer.wrap(pixelData);
         byteBuffer.position(0);
+
         GLES20.glReadPixels(x, y, w, h, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, byteBuffer);
 
-        int bitmapCounter = 0;
-        for (int i = 0; i < pixelData.length; i++) {
-            if ((i + 1) % 4 == 0) {
-                byte r = pixelData[i - 3];
-                byte g = pixelData[i - 2];
-                byte b = pixelData[i - 1];
-                byte a = pixelData[i];
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+//                byte pixelData[] = new byte[w * h * 4];
+//                ByteBuffer byteBuffer = ByteBuffer.wrap(pixelData);
+//                byteBuffer.position(0);
+//
+//                GLES20.glReadPixels(x, y, w, h, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, byteBuffer);
 
-                // Encode RGBA to sRGBA (single int) based on this link
-                // https://developer.android.com/reference/android/graphics/Color.html
-                int color = (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
-                bitmapData[bitmapCounter++] = color;
+                if (lock.tryAcquire()) {
+                    threadNum++;
+                    lock.release();
+                }
+
+                Utils.LogD(TAG, String.format("Thread %d finished", threadNum));
+                Utils.LogD(TAG,
+                    String.format("r:%d g:%d b:%d a:%d", pixelData[0], pixelData[1], pixelData[2], pixelData[3]));
+                listener.onPixelDataReceived(pixelData);
             }
-        }
+        };
+        new Thread(runnable).start();
 
-        Log.d(TAG,
-            String.format("sRGB:%d | r:%d g:%d b:%d a:%d", bitmapData[0], pixelData[0], pixelData[1], pixelData[2],
-                pixelData[3]));
+//        int bitmapCounter = 0;
+//        for (int i = 0; i < pixelData.length; i++) {
+//            if ((i + 1) % 4 == 0) {
+//                byte r = pixelData[i - 3];
+//                byte g = pixelData[i - 2];
+//                byte b = pixelData[i - 1];
+//                byte a = pixelData[i];
+//
+//                // Encode RGBA to sRGBA (single int) based on this link
+//                // https://developer.android.com/reference/android/graphics/Color.html
+//                int color = (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
+//                bitmapData[bitmapCounter++] = color;
+//            }
+//        }
 
-        return Bitmap.createBitmap(bitmapData, w, h, Bitmap.Config.ARGB_8888);
+//        Utils.LogD(TAG,
+//            String.format("sRGB:%d | r:%d g:%d b:%d a:%d", bitmapData[0], pixelData[0], pixelData[1], pixelData[2],
+//                pixelData[3]));
+
+//        Utils.LogD(TAG, String.format("r:%d g:%d b:%d a:%d", pixelData[0], pixelData[1], pixelData[2], pixelData[3]));
+
+//        return Bitmap.createBitmap(bitmapData, w, h, Bitmap.Config.ARGB_8888);
     }
 
     private void storeImage(Bitmap image) {
         File pictureFile = getOutputMediaFile();
         if (pictureFile == null) {
-            Log.d(TAG,
+            Utils.LogD(TAG,
                 "Error creating media file, check storage permissions: ");// e.getMessage());
             return;
         }
         try {
             FileOutputStream fos = new FileOutputStream(pictureFile);
-            Log.d(TAG, String.format("Saving file in %s", pictureFile.getAbsolutePath()));
+            Utils.LogD(TAG, String.format("Saving file in %s", pictureFile.getAbsolutePath()));
             image.compress(Bitmap.CompressFormat.PNG, 90, fos);
             fos.close();
         } catch (FileNotFoundException e) {
-            Log.d(TAG, "File not found: " + e.getMessage());
+            Utils.LogD(TAG, "File not found: " + e.getMessage());
         } catch (IOException e) {
-            Log.d(TAG, "Error accessing file: " + e.getMessage());
+            Utils.LogD(TAG, "Error accessing file: " + e.getMessage());
         }
     }
 

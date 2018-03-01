@@ -12,10 +12,15 @@ public class TrainingPresenter {
 
     private ButtonState buttonState = ButtonState.START; // default state is START
     private TrainingView view;
+    private boolean recording = false;
 
     TrainingPresenter(TrainingView view) {
         this.view = view;
         view.updateOneButton(buttonState.toString(), getLeftButtonColor());
+    }
+
+    public boolean isRecording() {
+        return recording;
     }
 
     void singleButtonClicked() {
@@ -41,9 +46,10 @@ public class TrainingPresenter {
 
     void onRecordingFinished() {
         buttonState = ButtonState.SAVE_RESET;
-        updateRecordingStatus("Recording Completed");
         view.updateTwoButton("Save", "Reset", getLeftButtonColor(), getRightButtonColor());
         view.stopRecording();
+        updateRecordingStatus("Recording Completed");
+        recording = false;
     }
 
     private void startClicked() {
@@ -51,6 +57,7 @@ public class TrainingPresenter {
         view.updateOneButton("STOP", getLeftButtonColor());
         view.startRecording();
         updateRecordingStatus("Recording in progress...");
+        recording = true;
     }
 
     private void stopClicked() {
@@ -58,6 +65,7 @@ public class TrainingPresenter {
         view.updateOneButton("START", getLeftButtonColor());
         view.stopRecording();
         updateRecordingStatus("Recording Cancelled");
+        recording = false;
     }
 
     private void saveClicked() {

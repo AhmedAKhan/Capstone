@@ -1,5 +1,6 @@
 package td.techjam.tangoclient.training;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import butterknife.ButterKnife;
 import td.techjam.tangoclient.HorizontalProgressBarView;
 import td.techjam.tangoclient.R;
 import td.techjam.tangoclient.TwoButtonView;
+import td.techjam.tangoclient.Utils;
 
 public class TrainingActivity extends FragmentActivity implements TwoButtonView.TwoButtonClickListener, TrainingView,
     TangoFragment.OnFragmentInteractionListener {
@@ -71,10 +73,11 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
 
             // Create a new Fragment to be placed in the activity layout
             tangoFragment = new TangoFragment();
+            tangoFragment.setPresenter(presenter);
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
-//            tangoFragment.setArguments(getIntent().getExtras());
+            //            tangoFragment.setArguments(getIntent().getExtras());
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
@@ -112,14 +115,14 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
 
     @Override
     public void startRecording() {
-        Log.d(TAG, "start recording");
+        Utils.LogD(TAG, "start recording");
         timerTask = new TimerTask();
         timerTask.execute();
     }
 
     @Override
     public void stopRecording() {
-        Log.d(TAG, "stop recording");
+        Utils.LogD(TAG, "stop recording");
         timerTask.cancel(true);
         progressBarTimer.setProgress(0);
     }
@@ -136,8 +139,15 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-        // TODO: Interact with Tango Fragment
+    public void onPixelDataReceived(final byte[] pixelData) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Utils.LogD(TAG, "RGB data received");
+                Utils.LogD(TAG,
+                    String.format("r:%d g:%d b:%d a:%d", pixelData[0], pixelData[1], pixelData[2], pixelData[3]));
+            }
+        });
     }
 
     class TimerTask extends AsyncTask<Void, Integer, Void> {
@@ -161,7 +171,7 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
                 }
 
                 progress++;
-                Log.d(TAG, String.format("progress:%d", progress));
+                Utils.LogD(TAG, String.format("progress:%d", progress));
                 publishProgress(progress);
             }
 

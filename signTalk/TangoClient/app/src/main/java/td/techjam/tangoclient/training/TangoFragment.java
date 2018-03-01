@@ -2,11 +2,9 @@ package td.techjam.tangoclient.training;
 
 import android.content.Context;
 import android.hardware.display.DisplayManager;
-import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +26,7 @@ import com.projecttango.tangosupport.TangoSupport;
 
 import static android.content.Context.DISPLAY_SERVICE;
 import td.techjam.tangoclient.R;
+import td.techjam.tangoclient.Utils;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,6 +51,7 @@ public class TangoFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private TrainingPresenter presenter;
     private OnFragmentInteractionListener mListener;
 
     private static final int INVALID_TEXTURE_ID = 0;
@@ -91,6 +91,10 @@ public class TangoFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setPresenter(TrainingPresenter presenter) {
+        this.presenter = presenter;
     }
 
     @Override
@@ -174,13 +178,13 @@ public class TangoFragment extends Fragment {
                         mIsConnected = true;
                         setDisplayRotation();
                     } catch (TangoOutOfDateException e) {
-                        Log.e(TAG, getString(R.string.exception_out_of_date), e);
+                        Utils.LogE(TAG, getString(R.string.exception_out_of_date), e);
                         showsToastAndFinishOnUiThread(R.string.exception_out_of_date);
                     } catch (TangoErrorException e) {
-                        Log.e(TAG, getString(R.string.exception_tango_error), e);
+                        Utils.LogE(TAG, getString(R.string.exception_tango_error), e);
                         showsToastAndFinishOnUiThread(R.string.exception_tango_error);
                     } catch (TangoInvalidException e) {
-                        Log.e(TAG, getString(R.string.exception_tango_invalid), e);
+                        Utils.LogE(TAG, getString(R.string.exception_tango_invalid), e);
                         showsToastAndFinishOnUiThread(R.string.exception_tango_invalid);
                     }
                 }
@@ -204,7 +208,7 @@ public class TangoFragment extends Fragment {
                 mTango.disconnect();
                 mIsConnected = false;
             } catch (TangoErrorException e) {
-                Log.e(TAG, getString(R.string.exception_tango_error), e);
+                Utils.LogE(TAG, getString(R.string.exception_tango_error), e);
             }
         }
     }
@@ -256,7 +260,7 @@ public class TangoFragment extends Fragment {
             public void onFrameAvailable(int cameraId) {
                 // This will get called every time a new RGB camera frame is available to be
                 // rendered.
-                Log.d(TAG, "onFrameAvailable");
+                Utils.LogD(TAG, "onFrameAvailable");
 
                 if (cameraId == TangoCameraIntrinsics.TANGO_CAMERA_COLOR) {
                     // Now that we are receiving onFrameAvailable callbacks, we can switch
@@ -297,7 +301,7 @@ public class TangoFragment extends Fragment {
         mRenderer = new TangoVideoRenderer(getActivity(), new TangoVideoRenderer.RenderCallback() {
             @Override
             public void preRender() {
-                Log.d(TAG, "preRender");
+                Utils.LogD(TAG, "preRender");
                 // This is the work that you would do on your main OpenGL render thread.
 
                 // We need to be careful to not run any Tango-dependent code in the OpenGL
@@ -318,7 +322,7 @@ public class TangoFragment extends Fragment {
                             mConnectedTextureIdGlThread = mRenderer.getTextureId();
                             mTango.connectTextureId(TangoCameraIntrinsics.TANGO_CAMERA_COLOR,
                                 mRenderer.getTextureId());
-                            Log.d(TAG, "connected to texture id: " + mRenderer.getTextureId());
+                            Utils.LogD(TAG, "connected to texture id: " + mRenderer.getTextureId());
                         }
 
                         // If there is a new RGB camera frame available, update the texture and
@@ -335,13 +339,36 @@ public class TangoFragment extends Fragment {
                             // java_augmented_reality_opengl_example projects.
 
                             // Log and display timestamp for informational purposes.
-                            Log.d(TAG, "Frame updated. Timestamp: " + rgbTimestamp);
+                            Utils.LogD(TAG, "Frame updated. Timestamp: " + rgbTimestamp);
                         }
                     }
                 } catch (TangoErrorException e) {
-                    Log.e(TAG, "Tango API call error within the OpenGL thread", e);
+                    Utils.LogE(TAG, "Tango API call error within the OpenGL thread", e);
                 } catch (Throwable t) {
-                    Log.e(TAG, "Exception on the OpenGL thread", t);
+                    Utils.LogE(TAG, "Exception on the OpenGL thread", t);
+                }
+            }
+
+            @Override
+            public void postRender(int width, int height) {
+                Utils.LogD(TAG, "postRender");
+
+                if (!mIsConnected || !presenter.isRecording()) {
+                    return;
+                }
+
+                try {
+                    synchronized (TangoFragment.this) {
+                        if (mListener != null) {
+                            mRenderer.readPixelData(0, 0, width, height, mListener);
+                        } else {
+                            Utils.LogE(TAG, "NPE inside postRender");
+                        }
+                    }
+                } catch (TangoErrorException e) {
+                    Utils.LogE(TAG, "Tango API call error within the OpenGL thread", e);
+                } catch (Throwable t) {
+                    Utils.LogE(TAG, "Exception on the OpenGL thread", t);
                 }
             }
         });
@@ -389,13 +416,6 @@ public class TangoFragment extends Fragment {
      * ----------------------------
      */
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -424,7 +444,6 @@ public class TangoFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onPixelDataReceived(byte[] pixelData);
     }
 }
