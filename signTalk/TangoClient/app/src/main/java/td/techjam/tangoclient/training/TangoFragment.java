@@ -1,6 +1,5 @@
 package td.techjam.tangoclient.training;
 
-import android.content.Context;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -31,28 +30,10 @@ import td.techjam.tangoclient.Utils;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TangoFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TangoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TangoFragment extends Fragment {
     private static final String TAG = TangoFragment.class.getSimpleName();
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private TrainingPresenter presenter;
-    private OnFragmentInteractionListener mListener;
 
     private static final int INVALID_TEXTURE_ID = 0;
 
@@ -72,38 +53,8 @@ public class TangoFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1
-     *     Parameter 1.
-     * @param param2
-     *     Parameter 2.
-     *
-     * @return A new instance of fragment TangoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TangoFragment newInstance(String param1, String param2) {
-        TangoFragment fragment = new TangoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public void setPresenter(TrainingPresenter presenter) {
         this.presenter = presenter;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //        if (getArguments() != null) {
-        //            mParam1 = getArguments().getString(ARG_PARAM1);
-        //            mParam2 = getArguments().getString(ARG_PARAM2);
-        //        }
     }
 
     @Override
@@ -359,11 +310,7 @@ public class TangoFragment extends Fragment {
 
                 try {
                     synchronized (TangoFragment.this) {
-                        if (mListener != null) {
-                            mRenderer.readPixelData(mListener);
-                        } else {
-                            Utils.LogE(TAG, "NPE inside postRender");
-                        }
+                        mRenderer.readPixelData(presenter);
                     }
                 } catch (TangoErrorException e) {
                     Utils.LogE(TAG, "Tango API call error within the OpenGL thread", e);
@@ -373,7 +320,7 @@ public class TangoFragment extends Fragment {
             }
         });
         mSurfaceView.setRenderer(mRenderer);
-        mListener.onDimensionDataReceived(mRenderer.getWidth(), mRenderer.getHeight());
+        presenter.onDimensionDataReceived(mRenderer.getWidth(), mRenderer.getHeight());
     }
 
     /**
@@ -416,23 +363,6 @@ public class TangoFragment extends Fragment {
      * Fragment Auto Generated Code
      * ----------------------------
      */
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener)context;
-        } else {
-            throw new RuntimeException(context.toString()
-                + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     /**
      * This interface must be implemented by activities that contain this

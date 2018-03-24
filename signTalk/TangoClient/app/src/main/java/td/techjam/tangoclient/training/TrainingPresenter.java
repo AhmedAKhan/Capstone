@@ -3,11 +3,13 @@ package td.techjam.tangoclient.training;
 import android.support.annotation.ColorRes;
 
 import td.techjam.tangoclient.R;
+import td.techjam.tangoclient.Utils;
 import td.techjam.tangoclient.model.RGBData;
 
 import java.util.ArrayList;
 
-public class TrainingPresenter {
+public class TrainingPresenter implements TangoFragment.OnFragmentInteractionListener {
+    private static final String TAG = TrainingPresenter.class.getSimpleName();
 
     private enum ButtonState {
         START, STOP, SAVE_RESET
@@ -27,7 +29,7 @@ public class TrainingPresenter {
         view.updateOneButton(buttonState.toString(), getLeftButtonColor());
     }
 
-    public boolean isRecording() {
+    boolean isRecording() {
         return recording;
     }
 
@@ -60,14 +62,22 @@ public class TrainingPresenter {
         recording = false;
     }
 
-    void setDimensions(int width, int height) {
+    @Override
+    public void onDimensionDataReceived(int width, int height) {
         this.width = width;
         this.height = height;
     }
 
-    void onFrameDataReceived(byte[] frame) {
+    /**
+     * Called from the OpenGL thread
+     */
+    @Override
+    public void onFrameDataReceived(byte[] frame) {
         numFrames++;
         rgbFrames.add(frame);
+        Utils.LogD(TAG, String.format("RGB data received for %d frames", numFrames));
+        Utils.LogD(TAG,
+            String.format("r:%d g:%d b:%d a:%d", frame[0], frame[1], frame[2], frame[3]));
     }
 
     private void startClicked() {

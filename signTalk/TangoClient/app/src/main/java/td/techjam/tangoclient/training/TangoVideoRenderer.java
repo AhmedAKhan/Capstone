@@ -115,7 +115,7 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
         // Enable depth buffer again for AR.
         GLES20.glDepthMask(true);
 
-        updateVPMatrix();
+//        updateVPMatrix();
 
 //        GLES20.glEnable(GLES20.GL_BLEND);
 //        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -123,7 +123,7 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
 //        mRectangle.draw(mVPMatrix);
 
         //        byte[] rgbData = savePixels(0, 0, 25, 25);
-//        mRenderCallback.postRender();
+        mRenderCallback.postRender();
 
         //        Utils.LogD("malik", String.format("Read %d pixels", (width * height)));
         //        int color = bitmap.getPixel(0, 0);

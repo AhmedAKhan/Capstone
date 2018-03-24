@@ -16,8 +16,8 @@ import td.techjam.tangoclient.TwoButtonView;
 import td.techjam.tangoclient.Utils;
 import td.techjam.tangoclient.model.RGBData;
 
-public class TrainingActivity extends FragmentActivity implements TwoButtonView.TwoButtonClickListener, TrainingView,
-    TangoFragment.OnFragmentInteractionListener {
+public class TrainingActivity extends FragmentActivity
+    implements TwoButtonView.TwoButtonClickListener, TrainingView {
     private static final String TAG = TrainingActivity.class.getSimpleName();
     public static final String LETTER = "LETTER";
 
@@ -34,8 +34,6 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     private TrainingPresenter presenter;
     private TimerTask timerTask;
     private TangoFragment tangoFragment;
-
-    private int frameNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +74,6 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
             tangoFragment = new TangoFragment();
             tangoFragment.setPresenter(presenter);
 
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            //            tangoFragment.setArguments(getIntent().getExtras());
-
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
                 .add(R.id.tango_fragment, tangoFragment).commit();
@@ -108,7 +102,8 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     }
 
     @Override
-    public void updateTwoButton(String textLeft, String textRight, @ColorRes int colorLeft, @ColorRes int colorRight) {
+    public void updateTwoButton(String textLeft, String textRight,
+        @ColorRes int colorLeft, @ColorRes int colorRight) {
         bottomButtons.setTwoButton(textLeft, textRight);
         bottomButtons.setLeftColor(colorLeft);
         bottomButtons.setRightColor(colorRight);
@@ -131,31 +126,13 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     @Override
     public void saveRecording(RGBData rgbData) {
         // make save REST call
-        Toast.makeText(this, String.format("Saved %d frames", rgbData.numFrames), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, String.format("Saved %d frames", rgbData.numFrames),
+            Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void updateRecordingStatus(String status) {
         progressBarTimer.setStatus(status);
-    }
-
-    @Override
-    public void onDimensionDataReceived(int width, int height) {
-        presenter.setDimensions(width, height);
-    }
-
-    @Override
-    public void onFrameDataReceived(byte[] frame) {
-        //        runOnUiThread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        presenter.onFrameDataReceived(frame);
-
-        Utils.LogD(TAG, String.format("RGB data received for %d frames", frameNum));
-        Utils.LogD(TAG,
-            String.format("r:%d g:%d b:%d a:%d", frame[0], frame[1], frame[2], frame[3]));
-        //            }
-        //        });
     }
 
     class TimerTask extends AsyncTask<Void, Integer, Void> {
