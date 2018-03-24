@@ -350,7 +350,7 @@ public class TangoFragment extends Fragment {
             }
 
             @Override
-            public void postRender(int width, int height) {
+            public void postRender() {
                 Utils.LogD(TAG, "postRender");
 
                 if (!mIsConnected || !presenter.isRecording()) {
@@ -360,7 +360,7 @@ public class TangoFragment extends Fragment {
                 try {
                     synchronized (TangoFragment.this) {
                         if (mListener != null) {
-                            mRenderer.readPixelData(0, 0, width, height, mListener);
+                            mRenderer.readPixelData(mListener);
                         } else {
                             Utils.LogE(TAG, "NPE inside postRender");
                         }
@@ -373,6 +373,7 @@ public class TangoFragment extends Fragment {
             }
         });
         mSurfaceView.setRenderer(mRenderer);
+        mListener.onDimensionDataReceived(mRenderer.getWidth(), mRenderer.getHeight());
     }
 
     /**
@@ -444,6 +445,7 @@ public class TangoFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onPixelDataReceived(byte[] pixelData);
+        void onDimensionDataReceived(int width, int height);
+        void onFrameDataReceived(byte[] frame);
     }
 }

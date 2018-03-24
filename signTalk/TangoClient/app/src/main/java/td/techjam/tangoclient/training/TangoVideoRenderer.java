@@ -17,26 +17,22 @@ package td.techjam.tangoclient.training;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 import android.os.Environment;
 
-import com.projecttango.tangosupport.TangoSupport;
-
 import td.techjam.tangoclient.Utils;
+import td.techjam.tangoclient.opengl.OpenGlCameraPreview;
+import td.techjam.tangoclient.opengl.OpenGlSquare;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.Semaphore;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -47,32 +43,16 @@ import javax.microedition.khronos.opengles.GL10;
 public class TangoVideoRenderer implements GLSurfaceView.Renderer {
     private static final String TAG = TangoVideoRenderer.class.getSimpleName();
 
-    private final String vss =
-        "attribute vec2 vPosition;\n" +
-            "attribute vec2 vTexCoord;\n" +
-            "varying vec2 texCoord;\n" +
-            "void main() {\n" +
-            "  texCoord = vTexCoord;\n" +
-            "  gl_Position = vec4(vPosition.x, vPosition.y, 0.0, 1.0);\n" +
-            "}";
+    // Dimensions and color for the rectangle (i.e. the capture area)
+    private int x = 100;
+    private int y = 100;
+    private int width = 100;
+    private int height = 100;
+    float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };   // yellow
 
-    private final String fss =
-        "#extension GL_OES_EGL_image_external : require\n" +
-            "precision mediump float;\n" +
-            "uniform samplerExternalOES sTexture;\n" +
-            "varying vec2 texCoord;\n" +
-            "void main() {\n" +
-            "  gl_FragColor = texture2D(sTexture,texCoord);\n" +
-            "}";
-
-    private final float[] textureCoords0 =
-        new float[] { 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
-
-    private int width;
-    private int height;
-
-    private int threadNum;
-    private Semaphore lock = new Semaphore(1);
+    private OpenGlSquare mRectangle;
+    private OpenGlCameraPreview mOpenGlCameraPreview;
+    private boolean mProjectionMatrixConfigured;
 
     /**
      * A small callback to allow the caller to introduce application-specific code to be executed
@@ -80,73 +60,46 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
      */
     public interface RenderCallback {
         void preRender();
-        void postRender(int width, int height);
+        void postRender();
     }
 
-    private FloatBuffer mVertex;
-    private FloatBuffer mTexCoord;
-    private ShortBuffer mIndices;
-    private int[] mVbos;
-    private int[] mTextures = new int[1];
-    private int mProgram;
     private RenderCallback mRenderCallback;
     private Context context;
+
+    private float[] mViewMatrix = new float[16];
+    private float[] mProjectionMatrix = new float[16];
+    private float[] mVPMatrix = new float[16];
 
     public TangoVideoRenderer(Context context, RenderCallback callback) {
         this.context = context;
         mRenderCallback = callback;
-        mTextures[0] = 0;
-        // Vertex positions.
-        float[] vtmp = { 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f };
-        // Vertex texture coords.
-        float[] ttmp = { 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f };
-        // Indices.
-        short[] itmp = { 0, 1, 2, 3 };
-        mVertex = ByteBuffer.allocateDirect(vtmp.length * Float.SIZE / 8).order(
-            ByteOrder.nativeOrder()).asFloatBuffer();
-        mVertex.put(vtmp);
-        mVertex.position(0);
-        mTexCoord = ByteBuffer.allocateDirect(ttmp.length * Float.SIZE / 8).order(
-            ByteOrder.nativeOrder()).asFloatBuffer();
-        mTexCoord.put(ttmp);
-        mTexCoord.position(0);
-        mIndices = ByteBuffer.allocateDirect(itmp.length * Short.SIZE / 8).order(
-            ByteOrder.nativeOrder()).asShortBuffer();
-        mIndices.put(itmp);
-        mIndices.position(0);
+
+        mOpenGlCameraPreview = new OpenGlCameraPreview();
     }
 
     public void updateColorCameraTextureUv(int rotation) {
-        float[] textureCoords =
-            TangoSupport.getVideoOverlayUVBasedOnDisplayRotation(textureCoords0, rotation);
-        setTextureCoords(textureCoords);
-    }
-
-    private void setTextureCoords(float[] textureCoords) {
-        mTexCoord.put(textureCoords);
-        mTexCoord.position(0);
-        if (mVbos != null) {
-            // Bind to texcoord buffer.
-            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVbos[1]);
-            // Populate it.
-            GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, 4 * 2 * Float
-                .SIZE / 8, mTexCoord, GLES20.GL_STATIC_DRAW); // texcoord of floats.
-        }
+        mOpenGlCameraPreview.updateTextureUv(rotation);
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-        createTextures();
-        createCameraVbos();
-        GLES20.glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
-        mProgram = getProgram(vss, fss);
+        // Enable depth test to discard fragments that are behind another fragment.
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        // Enable face culling to discard back-facing triangles.
+//        GLES20.glEnable(GLES20.GL_CULL_FACE);
+//        GLES20.glCullFace(GLES20.GL_BACK);
+        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        GLES20.glDepthMask(true);
+        mOpenGlCameraPreview.setUpProgramAndBuffers();
+
+        mRectangle = new OpenGlSquare(x, y, width, height, color);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
-        this.width = width;
-        this.height = height;
         GLES20.glViewport(0, 0, width, height);
+        setProjectionMatrix(width, height);
+        mProjectionMatrixConfigured = false;
     }
 
     @Override
@@ -156,193 +109,136 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
         // Call application-specific code that needs to run on the OpenGL thread.
         mRenderCallback.preRender();
 
-        GLES20.glUseProgram(mProgram);
-
         // Don't write depth buffer because we want to draw the camera as background.
         GLES20.glDepthMask(false);
-
-        int ph = GLES20.glGetAttribLocation(mProgram, "vPosition");
-        int tch = GLES20.glGetAttribLocation(mProgram, "vTexCoord");
-        int th = GLES20.glGetUniformLocation(mProgram, "sTexture");
-
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTextures[0]);
-        GLES20.glUniform1i(th, 0);
-
-        GLES20.glEnableVertexAttribArray(ph);
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVbos[0]);
-        GLES20.glVertexAttribPointer(ph, 2, GLES20.GL_FLOAT, false, 4 * 2, 0);
-
-        GLES20.glEnableVertexAttribArray(tch);
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVbos[1]);
-        GLES20.glVertexAttribPointer(tch, 2, GLES20.GL_FLOAT, false, 4 * 2, 0);
-
-        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, mVbos[2]);
-        GLES20.glDrawElements(GLES20.GL_TRIANGLE_STRIP, 4, GLES20.GL_UNSIGNED_SHORT, 0);
-
-//        byte[] rgbData = savePixels(0, 0, 25, 25);
-        mRenderCallback.postRender(width, height);
-
-//        Utils.LogD("malik", String.format("Read %d pixels", (width * height)));
-//        int color = bitmap.getPixel(0, 0);
-//        int a = (color >> 24) & 0xff; // or color >>> 24
-//        int r = (color >> 16) & 0xff;
-//        int g = (color >> 8) & 0xff;
-//        int b = (color) & 0xff;
-//        Utils.LogD("malik", String.format("r:%d, g:%d, b:%d, a:%d", r, g, b, a));
-//
-//        storeImage(bitmap);
-
-        // Unbind.
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
-        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        // Enable depth write again for any additional rendering on top of the camera surface.
+        mOpenGlCameraPreview.drawAsBackground();
+        // Enable depth buffer again for AR.
         GLES20.glDepthMask(true);
-    }
 
-    private void createTextures() {
-        mTextures = new int[1];
-        GLES20.glGenTextures(1, mTextures, 0);
-        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTextures[0]);
-        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,
-            GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,
-            GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
-        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,
-            GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,
-            GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+        updateVPMatrix();
+
+//        GLES20.glEnable(GLES20.GL_BLEND);
+//        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+
+//        mRectangle.draw(mVPMatrix);
+
+        //        byte[] rgbData = savePixels(0, 0, 25, 25);
+//        mRenderCallback.postRender();
+
+        //        Utils.LogD("malik", String.format("Read %d pixels", (width * height)));
+        //        int color = bitmap.getPixel(0, 0);
+        //        int a = (color >> 24) & 0xff; // or color >>> 24
+        //        int r = (color >> 16) & 0xff;
+        //        int g = (color >> 8) & 0xff;
+        //        int b = (color) & 0xff;
+        //        Utils.LogD("malik", String.format("r:%d, g:%d, b:%d, a:%d", r, g, b, a));
+        //
+        //        storeImage(bitmap);
+
     }
 
     /**
-     * Creates and populates vertex buffer objects for rendering the camera.
+     * Set the Projection matrix matching the Tango RGB camera in order to be able to do
+     * augmented reality.
      */
-    private void createCameraVbos() {
-        mVbos = new int[3];
-        // Generate three buffers: vertex buffer, texture buffer and index buffer.
-        GLES20.glGenBuffers(3, mVbos, 0);
-        // Bind to vertex buffer.
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVbos[0]);
-        // Populate it.
-        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, mVertex.capacity() * Float.SIZE / 8,
-            mVertex, GLES20.GL_STATIC_DRAW); // 4 2D vertex of floats.
-
-        // Bind to texture buffer.
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVbos[1]);
-        // Populate it.
-        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, mTexCoord.capacity() * Float.SIZE / 8,
-            mTexCoord, GLES20.GL_STATIC_DRAW); // 4 2D texture coords of floats.
-
-        // Bind to indices buffer.
-        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, mVbos[2]);
-        // Populate it.
-        GLES20.glBufferData(GLES20.GL_ELEMENT_ARRAY_BUFFER, mIndices.capacity() * Short.SIZE / 8,
-            mIndices, GLES20.GL_STATIC_DRAW); // 4 short indices.
-
-        // Unbind buffer.
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+    public void setProjectionMatrix(float[] matrixFloats, float nearPlane, float farPlane) {
+        mProjectionMatrix = matrixFloats;
+        mProjectionMatrixConfigured = true;
     }
 
-    private int getProgram(String vShaderSrc, String fShaderSrc) {
-        int program = GLES20.glCreateProgram();
-        if (program == 0) {
-            return 0;
-        }
-        int vShader = loadShader(GLES20.GL_VERTEX_SHADER, vShaderSrc);
-        int fShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fShaderSrc);
-        GLES20.glAttachShader(program, vShader);
-        GLES20.glAttachShader(program, fShader);
-        GLES20.glLinkProgram(program);
-        int[] linked = new int[1];
-        GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, linked, 0);
-        if (linked[0] == 0) {
-            Utils.LogE(TAG, "Could not link program");
-            Utils.LogV(TAG, "Could not link program:" +
-                GLES20.glGetProgramInfoLog(program));
-            GLES20.glDeleteProgram(program);
-            return 0;
-        }
-        return program;
+    /**
+     * Update the View matrix matching the pose of the Tango RGB camera.
+     *
+     * @param ssTcamera The transform from RGB camera to Start of Service.
+     */
+    public void updateViewMatrix(float[] ssTcamera) {
+        float[] viewMatrix = new float[16];
+        Matrix.invertM(viewMatrix, 0, ssTcamera, 0);
+        mViewMatrix = viewMatrix;
     }
 
-    private int loadShader(int type, String shaderSrc) {
-        int shader = GLES20.glCreateShader(type);
-        GLES20.glShaderSource(shader, shaderSrc);
-        GLES20.glCompileShader(shader);
-        int[] compiled = new int[1];
-        GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
-        if (compiled[0] == 0) {
-            Utils.LogE(TAG, "Could not compile shader");
-            Utils.LogV(TAG, "Could not compile shader:" +
-                GLES20.glGetShaderInfoLog(shader));
-            GLES20.glDeleteShader(shader);
-            return 0;
-        }
-        return shader;
+    public boolean isProjectionMatrixConfigured() {
+        return mProjectionMatrixConfigured;
     }
 
-    public int getTextureId() {
-        return mTextures[0];
+    /**
+     * Composes the view and projection matrices into a single VP matrix.
+     */
+    private void updateVPMatrix() {
+        // Set the camera position (View matrix)
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -5,
+            0f, 0f, 0f, 0f, 1.0f, 0.0f);
+
+        // Calculate the projection and view transformation
+        // (i.e. multiply mProjectionMatrix by mViewMatrix and store it in mMVPMatrix)
+        Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
     }
 
-    public void readPixelData(final int x, final int y, final int w, final int h,
-        final TangoFragment.OnFragmentInteractionListener listener) {
-//        final byte pixelData[] = new byte[w * h * 4];
-////        int bitmapData[] = new int[w * h];
-//        final ByteBuffer byteBuffer = ByteBuffer.wrap(pixelData);
-//        byteBuffer.position(0);
+    private void setProjectionMatrix(int width, int height) {
+        float ratio = (float)width / height;
 
-        final byte pixelData[] = new byte[w * h * 4];
+        // this projection matrix is applied to object coordinates
+        // in the onDrawFrame() method
+        // Transforms shapes to adjust according to the device size (because by default OpenGL assumes all devices
+        // are a perfect square)
+        // NOTE: must also apply a camera view transformation in {@code onDrawFrame} in order for anything to show up
+        // on screen
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+    }
+
+    int getTextureId() {
+        return mOpenGlCameraPreview.getTextureId();
+    }
+
+    void readPixelData(TangoFragment.OnFragmentInteractionListener listener) {
+        //        byte pixelData[] = new byte[w * h * 4];
+        //        int bitmapData[] = new int[w * h];
+        //        ByteBuffer byteBuffer = ByteBuffer.wrap(pixelData);
+        //        byteBuffer.position(0);
+
+        byte pixelData[] = new byte[width * height * 4];
         ByteBuffer byteBuffer = ByteBuffer.wrap(pixelData);
         byteBuffer.position(0);
 
-        GLES20.glReadPixels(x, y, w, h, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, byteBuffer);
+        GLES20.glReadPixels(x, y, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, byteBuffer);
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-//                byte pixelData[] = new byte[w * h * 4];
-//                ByteBuffer byteBuffer = ByteBuffer.wrap(pixelData);
-//                byteBuffer.position(0);
-//
-//                GLES20.glReadPixels(x, y, w, h, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, byteBuffer);
+        Utils.LogD(TAG,
+            String.format("r:%d g:%d b:%d a:%d", pixelData[0], pixelData[1], pixelData[2], pixelData[3]));
 
-                if (lock.tryAcquire()) {
-                    threadNum++;
-                    lock.release();
-                }
+        listener.onFrameDataReceived(pixelData);
 
-                Utils.LogD(TAG, String.format("Thread %d finished", threadNum));
-                Utils.LogD(TAG,
-                    String.format("r:%d g:%d b:%d a:%d", pixelData[0], pixelData[1], pixelData[2], pixelData[3]));
-                listener.onPixelDataReceived(pixelData);
-            }
-        };
-        new Thread(runnable).start();
+        //        int bitmapCounter = 0;
+        //        for (int i = 0; i < pixelData.length; i++) {
+        //            if ((i + 1) % 4 == 0) {
+        //                byte r = pixelData[i - 3];
+        //                byte g = pixelData[i - 2];
+        //                byte b = pixelData[i - 1];
+        //                byte a = pixelData[i];
+        //
+        //                // Encode RGBA to sRGBA (single int) based on this link
+        //                // https://developer.android.com/reference/android/graphics/Color.html
+        //                int color = (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
+        //                bitmapData[bitmapCounter++] = color;
+        //            }
+        //        }
 
-//        int bitmapCounter = 0;
-//        for (int i = 0; i < pixelData.length; i++) {
-//            if ((i + 1) % 4 == 0) {
-//                byte r = pixelData[i - 3];
-//                byte g = pixelData[i - 2];
-//                byte b = pixelData[i - 1];
-//                byte a = pixelData[i];
-//
-//                // Encode RGBA to sRGBA (single int) based on this link
-//                // https://developer.android.com/reference/android/graphics/Color.html
-//                int color = (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
-//                bitmapData[bitmapCounter++] = color;
-//            }
-//        }
+        //        Utils.LogD(TAG,
+        //            String.format("sRGB:%d | r:%d g:%d b:%d a:%d", bitmapData[0], pixelData[0], pixelData[1],
+        // pixelData[2],
+        //                pixelData[3]));
 
-//        Utils.LogD(TAG,
-//            String.format("sRGB:%d | r:%d g:%d b:%d a:%d", bitmapData[0], pixelData[0], pixelData[1], pixelData[2],
-//                pixelData[3]));
+        //        Utils.LogD(TAG, String.format("r:%d g:%d b:%d a:%d", pixelData[0], pixelData[1], pixelData[2],
+        // pixelData[3]));
 
-//        Utils.LogD(TAG, String.format("r:%d g:%d b:%d a:%d", pixelData[0], pixelData[1], pixelData[2], pixelData[3]));
+        //        return Bitmap.createBitmap(bitmapData, w, h, Bitmap.Config.ARGB_8888);
+    }
 
-//        return Bitmap.createBitmap(bitmapData, w, h, Bitmap.Config.ARGB_8888);
+    int getWidth() {
+        return width;
+    }
+
+    int getHeight() {
+        return height;
     }
 
     private void storeImage(Bitmap image) {

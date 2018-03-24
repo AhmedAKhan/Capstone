@@ -1,7 +1,5 @@
 package td.techjam.tangoclient.training;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -16,6 +14,7 @@ import td.techjam.tangoclient.HorizontalProgressBarView;
 import td.techjam.tangoclient.R;
 import td.techjam.tangoclient.TwoButtonView;
 import td.techjam.tangoclient.Utils;
+import td.techjam.tangoclient.model.RGBData;
 
 public class TrainingActivity extends FragmentActivity implements TwoButtonView.TwoButtonClickListener, TrainingView,
     TangoFragment.OnFragmentInteractionListener {
@@ -35,6 +34,8 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     private TrainingPresenter presenter;
     private TimerTask timerTask;
     private TangoFragment tangoFragment;
+
+    private int frameNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,9 +129,9 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     }
 
     @Override
-    public void saveRecording() {
-        Toast.makeText(this, "SAVE", Toast.LENGTH_SHORT).show();
+    public void saveRecording(RGBData rgbData) {
         // make save REST call
+        Toast.makeText(this, String.format("Saved %d frames", rgbData.numFrames), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -139,15 +140,22 @@ public class TrainingActivity extends FragmentActivity implements TwoButtonView.
     }
 
     @Override
-    public void onPixelDataReceived(final byte[] pixelData) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Utils.LogD(TAG, "RGB data received");
-                Utils.LogD(TAG,
-                    String.format("r:%d g:%d b:%d a:%d", pixelData[0], pixelData[1], pixelData[2], pixelData[3]));
-            }
-        });
+    public void onDimensionDataReceived(int width, int height) {
+        presenter.setDimensions(width, height);
+    }
+
+    @Override
+    public void onFrameDataReceived(byte[] frame) {
+        //        runOnUiThread(new Runnable() {
+        //            @Override
+        //            public void run() {
+        presenter.onFrameDataReceived(frame);
+
+        Utils.LogD(TAG, String.format("RGB data received for %d frames", frameNum));
+        Utils.LogD(TAG,
+            String.format("r:%d g:%d b:%d a:%d", frame[0], frame[1], frame[2], frame[3]));
+        //            }
+        //        });
     }
 
     class TimerTask extends AsyncTask<Void, Integer, Void> {
