@@ -11,6 +11,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Response;
 import td.techjam.tangoclient.model.GenericResponse;
+import td.techjam.tangoclient.network.RestService;
+import td.techjam.tangoclient.network.ServiceCallback;
+import td.techjam.tangoclient.network.StubData;
 
 public class DashboardActivity extends BaseNetworkActivity {
 
@@ -46,7 +49,8 @@ public class DashboardActivity extends BaseNetworkActivity {
                         restService.getTest(new TestCallback<String>(progressBar));
                         break;
                     case SAVE:
-                        restService.save(new TestCallback<GenericResponse>(progressBar));
+                        restService.save(StubData.getSaveRequest(),
+                            new TestCallback<GenericResponse>(progressBar));
                         break;
                     default:
                         // shouldn't fire
@@ -91,12 +95,12 @@ public class DashboardActivity extends BaseNetworkActivity {
         }
 
         @Override
-        void onSuccessfulResponse(Response response, T body) {
+        public void onSuccessfulResponse(Response response, T body) {
             tvTestResponse.setText(response.raw().toString());
         }
 
         @Override
-        void onFailure(Response response) {
+        public void onFailure(Response response) {
             tvTestResponse.setText("Failed");
         }
     }

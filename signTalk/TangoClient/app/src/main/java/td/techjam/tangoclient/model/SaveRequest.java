@@ -5,17 +5,17 @@ import android.os.Parcelable;
 
 public class SaveRequest implements Parcelable {
 
-    int [][][][] frames;
-    Resolution resolution;
+    public String letter;
+    public RGBData rgb;
 
-    public SaveRequest(int[][][][] frames, Resolution resolution) {
-        this.frames = frames;
-        this.resolution = resolution;
+    public SaveRequest(String letter, RGBData rgb) {
+        this.letter = letter;
+        this.rgb = rgb;
     }
 
     private SaveRequest(Parcel in) {
-        read4DArray(in);
-        this.resolution = in.readParcelable(getClass().getClassLoader());
+        this.letter = in.readString();
+        this.rgb = in.readParcelable(getClass().getClassLoader());
     }
 
     public static final Creator<SaveRequest> CREATOR = new Creator<SaveRequest>() {
@@ -37,46 +37,8 @@ public class SaveRequest implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        write4DArray(parcel);
-        parcel.writeParcelable(resolution, 0);
+        parcel.writeString(letter);
+        parcel.writeParcelable(rgb, 0);
     }
 
-    private void write4DArray(Parcel parcel) {
-        int I = frames.length;
-        int J = I > 0 ? frames[0].length : 0;
-        int K = J > 0 ? frames[0][0].length : 0;
-        int L = K > 0 ? frames[0][0][0].length : 0;
-
-        parcel.writeInt(I);
-        parcel.writeInt(J);
-        parcel.writeInt(K);
-        parcel.writeInt(L);
-
-        for (int i = 0; i < I; i++) {
-            for (int j = 0; j < J; j++) {
-                for (int k = 0; k < K; k++) {
-                    for (int l = 0; l < L; l++) {
-                        parcel.writeInt(frames[i][j][k][l]);
-                    }
-                }
-            }
-        }
-    }
-
-    private void read4DArray(Parcel in) {
-        int I = in.readInt();
-        int J = in.readInt();
-        int K = in.readInt();
-        int L = in.readInt();
-
-        for (int i = 0; i < I; i++) {
-            for (int j = 0; j < J; j++) {
-                for (int k = 0; k < K; k++) {
-                    for (int l = 0; l < L; l++) {
-                        frames[i][j][k][l] = in.readInt();
-                    }
-                }
-            }
-        }
-    }
 }

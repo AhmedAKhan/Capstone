@@ -5,6 +5,7 @@ import android.support.annotation.ColorRes;
 import td.techjam.tangoclient.R;
 import td.techjam.tangoclient.Utils;
 import td.techjam.tangoclient.model.RGBData;
+import td.techjam.tangoclient.model.SaveRequest;
 
 import java.util.ArrayList;
 
@@ -21,11 +22,14 @@ public class TrainingPresenter implements TangoFragment.OnFragmentInteractionLis
 
     private int width;
     private int height;
-    private int numFrames = 0;
+    private int totalFrames = 0;
+    private int recordedFrames = 0;
     private ArrayList<byte[]> rgbFrames = new ArrayList<>();
+    private String letter;
 
-    TrainingPresenter(TrainingView view) {
+    TrainingPresenter(TrainingView view, String letter) {
         this.view = view;
+        this.letter = letter;
         view.updateOneButton(buttonState.toString(), getLeftButtonColor());
     }
 
@@ -73,9 +77,13 @@ public class TrainingPresenter implements TangoFragment.OnFragmentInteractionLis
      */
     @Override
     public void onFrameDataReceived(byte[] frame) {
-        numFrames++;
-        rgbFrames.add(frame);
-        Utils.LogD(TAG, String.format("RGB data received for %d frames", numFrames));
+        // Record on 1/3rd of the total frames
+        if (totalFrames % 3 == 0){
+            rgbFrames.add(frame);
+            recordedFrames++;
+        }
+        totalFrames++;
+        Utils.LogD(TAG, String.format("RGB data received for %d frames", totalFrames));
         Utils.LogD(TAG,
             String.format("r:%d g:%d b:%d a:%d", frame[0], frame[1], frame[2], frame[3]));
     }
@@ -97,9 +105,9 @@ public class TrainingPresenter implements TangoFragment.OnFragmentInteractionLis
     }
 
     private void saveClicked() {
-        byte[][] frames = (byte[][]) rgbFrames.toArray();
-        RGBData rgbData = new RGBData(width, height, numFrames, frames);
-        view.saveRecording(rgbData);
+        byte[][] frames = getFramesAsArray();
+        RGBData rgbData = new RGBData(width, height, recordedFrames, frames);
+        view.saveRecording(createSaveRequest(rgbData));
         resetStoredData();
     }
 
@@ -111,7 +119,8 @@ public class TrainingPresenter implements TangoFragment.OnFragmentInteractionLis
     }
 
     private void resetStoredData() {
-        numFrames = 0;
+        totalFrames = 0;
+        recordedFrames = 0;
         rgbFrames = new ArrayList<>();
     }
 
@@ -138,5 +147,19 @@ public class TrainingPresenter implements TangoFragment.OnFragmentInteractionLis
 
     private void resetRecordingStatus() {
         view.updateRecordingStatus("");
+    }
+
+    private byte[][] getFramesAsArray() {
+        byte[][] frames = new byte[rgbFrames.size()][rgbFrames.get(0).length];
+        for (int i = 0; i < frames.length; i++) {
+            for (int j = 0; j < frames[0].length; j++) {
+                frames[i][j] = rgbFrames.get(i)[j];
+            }
+        }
+        return frames;
+    }
+
+    private SaveRequest createSaveRequest(RGBData rgbData) {
+        return new SaveRequest(letter, rgbData);
     }
 }

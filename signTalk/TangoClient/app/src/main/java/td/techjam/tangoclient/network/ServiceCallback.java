@@ -1,4 +1,4 @@
-package td.techjam.tangoclient;
+package td.techjam.tangoclient.network;
 
 import android.util.Log;
 import android.view.View;
@@ -53,6 +53,6 @@ public abstract class ServiceCallback<T> implements Callback<T> {
         onFailure(response);
     }
 
-    abstract void onSuccessfulResponse(Response response, T body);
-    abstract void onFailure(Response response);
+    public abstract void onSuccessfulResponse(Response response, T body);
+    public abstract void onFailure(Response response);
 }

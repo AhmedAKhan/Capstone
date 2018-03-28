@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package td.techjam.tangoclient.training;
+package td.techjam.tangoclient.opengl;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,8 +23,7 @@ import android.opengl.Matrix;
 import android.os.Environment;
 
 import td.techjam.tangoclient.Utils;
-import td.techjam.tangoclient.opengl.OpenGlCameraPreview;
-import td.techjam.tangoclient.opengl.OpenGlSquare;
+import td.techjam.tangoclient.training.TangoFragment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,8 +45,8 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
     // Dimensions and color for the rectangle (i.e. the capture area)
     private int x = 100;
     private int y = 100;
-    private int width = 100;
-    private int height = 100;
+    private int width = 25;
+    private int height = 25;
     float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };   // yellow
 
     private OpenGlSquare mRectangle;
@@ -186,11 +185,11 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
     }
 
-    int getTextureId() {
+    public int getTextureId() {
         return mOpenGlCameraPreview.getTextureId();
     }
 
-    void readPixelData(TangoFragment.OnFragmentInteractionListener listener) {
+    public void readPixelData(TangoFragment.OnFragmentInteractionListener listener) {
         //        byte pixelData[] = new byte[w * h * 4];
         //        int bitmapData[] = new int[w * h];
         //        ByteBuffer byteBuffer = ByteBuffer.wrap(pixelData);
@@ -207,20 +206,22 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
 
         listener.onFrameDataReceived(pixelData);
 
-        //        int bitmapCounter = 0;
-        //        for (int i = 0; i < pixelData.length; i++) {
-        //            if ((i + 1) % 4 == 0) {
-        //                byte r = pixelData[i - 3];
-        //                byte g = pixelData[i - 2];
-        //                byte b = pixelData[i - 1];
-        //                byte a = pixelData[i];
-        //
-        //                // Encode RGBA to sRGBA (single int) based on this link
-        //                // https://developer.android.com/reference/android/graphics/Color.html
-        //                int color = (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
-        //                bitmapData[bitmapCounter++] = color;
-        //            }
-        //        }
+//        int colorData[] = new int[width * height];
+//        int colorDataCounter = 0;
+//
+//        for (int i = 0; i < pixelData.length; i++) {
+//            if ((i + 1) % 4 == 0) {
+//                byte r = pixelData[i - 3];
+//                byte g = pixelData[i - 2];
+//                byte b = pixelData[i - 1];
+//                byte a = pixelData[i];
+//
+//                // Encode RGBA to sRGBA (single int) based on this link
+//                // https://developer.android.com/reference/android/graphics/Color.html
+//                int color = (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
+//                colorData[colorDataCounter++] = color;
+//            }
+//        }
 
         //        Utils.LogD(TAG,
         //            String.format("sRGB:%d | r:%d g:%d b:%d a:%d", bitmapData[0], pixelData[0], pixelData[1],
@@ -233,11 +234,11 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
         //        return Bitmap.createBitmap(bitmapData, w, h, Bitmap.Config.ARGB_8888);
     }
 
-    int getWidth() {
+    public int getWidth() {
         return width;
     }
 
-    int getHeight() {
+    public int getHeight() {
         return height;
     }
 

@@ -26,6 +26,7 @@ import com.projecttango.tangosupport.TangoSupport;
 import static android.content.Context.DISPLAY_SERVICE;
 import td.techjam.tangoclient.R;
 import td.techjam.tangoclient.Utils;
+import td.techjam.tangoclient.opengl.TangoVideoRenderer;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -290,7 +291,7 @@ public class TangoFragment extends Fragment {
                             // java_augmented_reality_opengl_example projects.
 
                             // Log and display timestamp for informational purposes.
-                            Utils.LogD(TAG, "Frame updated. Timestamp: " + rgbTimestamp);
+//                            Utils.LogD(TAG, "Frame updated. Timestamp: " + rgbTimestamp);
                         }
                     }
                 } catch (TangoErrorException e) {
@@ -302,7 +303,7 @@ public class TangoFragment extends Fragment {
 
             @Override
             public void postRender() {
-                Utils.LogD(TAG, "postRender");
+//                Utils.LogD(TAG, "postRender");
 
                 if (!mIsConnected || !presenter.isRecording()) {
                     return;

@@ -5,16 +5,22 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Response;
 import td.techjam.tangoclient.HorizontalProgressBarView;
 import td.techjam.tangoclient.R;
+import td.techjam.tangoclient.model.GenericResponse;
+import td.techjam.tangoclient.model.SaveRequest;
+import td.techjam.tangoclient.network.RestService;
 import td.techjam.tangoclient.TwoButtonView;
 import td.techjam.tangoclient.Utils;
 import td.techjam.tangoclient.model.RGBData;
+import td.techjam.tangoclient.network.ServiceCallback;
 
 public class TrainingActivity extends FragmentActivity
     implements TwoButtonView.TwoButtonClickListener, TrainingView {
@@ -30,10 +36,14 @@ public class TrainingActivity extends FragmentActivity
     @BindView(R.id.progress_bar_timer)
     HorizontalProgressBarView progressBarTimer;
 
+    @BindView(R.id.training_progress_bar)
+    ProgressBar progressBar;
+
     private String letter;
     private TrainingPresenter presenter;
     private TimerTask timerTask;
     private TangoFragment tangoFragment;
+    private RestService restService = new RestService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +63,7 @@ public class TrainingActivity extends FragmentActivity
     }
 
     private void initView() {
-        presenter = new TrainingPresenter(this);
+        presenter = new TrainingPresenter(this, letter);
         tvLetter.setText(letter);
         bottomButtons.setTwoButtonClickListener(this);
     }
@@ -124,10 +134,12 @@ public class TrainingActivity extends FragmentActivity
     }
 
     @Override
-    public void saveRecording(RGBData rgbData) {
+    public void saveRecording(SaveRequest saveRequest) {
         // make save REST call
-        Toast.makeText(this, String.format("Saved %d frames", rgbData.numFrames),
+        int numFrames = saveRequest.rgb.numFrames;
+        Toast.makeText(this, String.format("Saving %d frames", numFrames),
             Toast.LENGTH_SHORT).show();
+        restService.save(saveRequest, new SaveCallback<GenericResponse>(progressBar));
     }
 
     @Override
@@ -173,6 +185,26 @@ public class TrainingActivity extends FragmentActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             presenter.onRecordingFinished();
+        }
+    }
+
+    class SaveCallback<SaveRequest> extends ServiceCallback<SaveRequest> {
+
+        public SaveCallback(ProgressBar progressBar) {
+            super(progressBar);
+        }
+
+        @Override
+        public void onSuccessfulResponse(Response response, SaveRequest body) {
+            Toast.makeText(TrainingActivity.this, "Saved successfully",
+                Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onFailure(Response response) {
+            Toast.makeText(TrainingActivity.this, "Save Failed",
+                Toast.LENGTH_LONG).show();
+
         }
     }
 }

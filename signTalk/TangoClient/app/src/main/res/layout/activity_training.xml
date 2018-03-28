@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context="td.techjam.tangoclient.training.TrainingActivity">
 
+    <ProgressBar
+        android:id="@+id/training_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <TextView
         android:id="@+id/tv_letter"
         style="@style/title"
