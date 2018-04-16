@@ -43,10 +43,10 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
     private static final String TAG = TangoVideoRenderer.class.getSimpleName();
 
     // Dimensions and color for the rectangle (i.e. the capture area)
-    private int x = 100;
-    private int y = 100;
-    private int width = 25;
-    private int height = 25;
+    private int x = 0;
+    private int y = 0;
+    private int width = 400;
+    private int height = 400;
     float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };   // yellow
 
     private OpenGlSquare mRectangle;
@@ -204,24 +204,24 @@ public class TangoVideoRenderer implements GLSurfaceView.Renderer {
         Utils.LogD(TAG,
             String.format("r:%d g:%d b:%d a:%d", pixelData[0], pixelData[1], pixelData[2], pixelData[3]));
 
-        listener.onFrameDataReceived(pixelData);
+        int colorData[] = new int[width * height];
+        int colorDataCounter = 0;
 
-//        int colorData[] = new int[width * height];
-//        int colorDataCounter = 0;
-//
-//        for (int i = 0; i < pixelData.length; i++) {
-//            if ((i + 1) % 4 == 0) {
-//                byte r = pixelData[i - 3];
-//                byte g = pixelData[i - 2];
-//                byte b = pixelData[i - 1];
-//                byte a = pixelData[i];
-//
-//                // Encode RGBA to sRGBA (single int) based on this link
-//                // https://developer.android.com/reference/android/graphics/Color.html
-//                int color = (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
-//                colorData[colorDataCounter++] = color;
-//            }
-//        }
+        for (int i = 0; i < pixelData.length; i++) {
+            if ((i + 1) % 4 == 0) {
+                byte r = pixelData[i - 3];
+                byte g = pixelData[i - 2];
+                byte b = pixelData[i - 1];
+                byte a = pixelData[i];
+
+                // Encode RGBA to sRGBA (single int) based on this link
+                // https://developer.android.com/reference/android/graphics/Color.html
+                int color = (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
+                colorData[colorDataCounter++] = color;
+            }
+        }
+
+        listener.onFrameDataReceived(colorData);
 
         //        Utils.LogD(TAG,
         //            String.format("sRGB:%d | r:%d g:%d b:%d a:%d", bitmapData[0], pixelData[0], pixelData[1],

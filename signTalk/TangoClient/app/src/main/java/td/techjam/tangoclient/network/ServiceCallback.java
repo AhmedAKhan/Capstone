@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import td.techjam.tangoclient.Utils;
 
 public abstract class ServiceCallback<T> implements Callback<T> {
     private static final String TAG = ServiceCallback.class.getSimpleName();
@@ -19,10 +20,12 @@ public abstract class ServiceCallback<T> implements Callback<T> {
     }
 
     public void startLoading() {
+        Utils.LogD("malik", "startLoading");
         progressBar.setVisibility(View.VISIBLE);
     }
 
     public void stopLoading() {
+        Utils.LogD("malik", "stopLoading");
         progressBar.setVisibility(View.GONE);
     }
 

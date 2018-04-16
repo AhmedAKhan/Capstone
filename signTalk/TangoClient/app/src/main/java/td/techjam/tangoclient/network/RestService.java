@@ -9,7 +9,7 @@ import td.techjam.tangoclient.model.SaveRequest;
 public class RestService {
 
     // 10.0.2.2 is used for emulator to connect to localhost
-    private static final String BASE_URL = "https://07b0208d.ngrok.io/";
+    private static final String BASE_URL = "http://ceceea29.ngrok.io/";
 
     private FlaskApi flaskApi;
 

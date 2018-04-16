@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -135,16 +136,27 @@ public class TrainingActivity extends FragmentActivity
 
     @Override
     public void saveRecording(SaveRequest saveRequest) {
-        // make save REST call
+        // TODO: Disable SAVE/RESET when saving. Change back to START after done saving
         int numFrames = saveRequest.rgb.numFrames;
-        Toast.makeText(this, String.format("Saving %d frames", numFrames),
-            Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, String.format("Saving %d frames", numFrames),
+//            Toast.LENGTH_SHORT).show();
+        Utils.LogD("malik", "saving " + numFrames + " frames");
         restService.save(saveRequest, new SaveCallback<GenericResponse>(progressBar));
     }
 
     @Override
     public void updateRecordingStatus(String status) {
         progressBarTimer.setStatus(status);
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
     }
 
     class TimerTask extends AsyncTask<Void, Integer, Void> {

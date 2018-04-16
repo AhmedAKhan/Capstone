@@ -10,7 +10,7 @@ public class StubData {
         int width = 100;
         int height = 100;
         int numFrames = 90;
-        byte[][] frames = {{1,2,3,4},{5,6,7,8}};
+        int[][] frames = {{1,2,3,4},{5,6,7,8}};
         RGBData rgbData = new RGBData(width,height,numFrames,frames);
 
         return new SaveRequest(letter, rgbData);

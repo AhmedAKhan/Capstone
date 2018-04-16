@@ -24,7 +24,7 @@ public class TrainingPresenter implements TangoFragment.OnFragmentInteractionLis
     private int height;
     private int totalFrames = 0;
     private int recordedFrames = 0;
-    private ArrayList<byte[]> rgbFrames = new ArrayList<>();
+    private ArrayList<int[]> rgbFrames = new ArrayList<>();
     private String letter;
 
     TrainingPresenter(TrainingView view, String letter) {
@@ -76,16 +76,22 @@ public class TrainingPresenter implements TangoFragment.OnFragmentInteractionLis
      * Called from the OpenGL thread
      */
     @Override
-    public void onFrameDataReceived(byte[] frame) {
+    public void onFrameDataReceived(int[] frame) {
         // Record on 1/3rd of the total frames
         if (totalFrames % 3 == 0){
             rgbFrames.add(frame);
             recordedFrames++;
         }
         totalFrames++;
+
+        int color = frame[0];
+        int a = (color >> 24) & 0xff; // or color >>> 24
+        int r = (color >> 16) & 0xff;
+        int g = (color >> 8) & 0xff;
+        int b = (color) & 0xff;
+
         Utils.LogD(TAG, String.format("RGB data received for %d frames", totalFrames));
-        Utils.LogD(TAG,
-            String.format("r:%d g:%d b:%d a:%d", frame[0], frame[1], frame[2], frame[3]));
+        Utils.LogD(TAG, String.format("r:%d g:%d b:%d a:%d", r, g, b, a));
     }
 
     private void startClicked() {
@@ -105,8 +111,13 @@ public class TrainingPresenter implements TangoFragment.OnFragmentInteractionLis
     }
 
     private void saveClicked() {
-        byte[][] frames = getFramesAsArray();
+//        view.showProgressBar();
+        Utils.LogD("malik", "save clicked");
+        int[][] frames = getFramesAsArray();
         RGBData rgbData = new RGBData(width, height, recordedFrames, frames);
+        Utils.LogD("malik", "extracted " + frames.length + " frames");
+//        view.hideProgressBar();
+
         view.saveRecording(createSaveRequest(rgbData));
         resetStoredData();
     }
@@ -149,8 +160,8 @@ public class TrainingPresenter implements TangoFragment.OnFragmentInteractionLis
         view.updateRecordingStatus("");
     }
 
-    private byte[][] getFramesAsArray() {
-        byte[][] frames = new byte[rgbFrames.size()][rgbFrames.get(0).length];
+    private int[][] getFramesAsArray() {
+        int[][] frames = new int[rgbFrames.size()][rgbFrames.get(0).length];
         for (int i = 0; i < frames.length; i++) {
             for (int j = 0; j < frames[0].length; j++) {
                 frames[i][j] = rgbFrames.get(i)[j];

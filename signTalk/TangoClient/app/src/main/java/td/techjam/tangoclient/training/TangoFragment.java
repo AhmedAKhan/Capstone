@@ -377,6 +377,6 @@ public class TangoFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onDimensionDataReceived(int width, int height);
-        void onFrameDataReceived(byte[] frame);
+        void onFrameDataReceived(int[] frame);
     }
 }

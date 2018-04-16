@@ -12,4 +12,6 @@ public interface TrainingView {
     void stopRecording();
     void saveRecording(SaveRequest saveRequest);
     void updateRecordingStatus(String status);
+    void showProgressBar();
+    void hideProgressBar();
 }

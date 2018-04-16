@@ -8,9 +8,9 @@ public class RGBData implements Parcelable {
     public int width;
     public int height;
     public int numFrames;
-    public byte[][] frames;
+    public int[][] frames;
 
-    public RGBData(int width, int height, int numFrames, byte[][] frames) {
+    public RGBData(int width, int height, int numFrames, int[][] frames) {
         this.width = width;
         this.height = height;
         this.numFrames = numFrames;
@@ -69,7 +69,7 @@ public class RGBData implements Parcelable {
 
         for (int i = 0; i < I; i++) {
             for (int j = 0; j < J; j++) {
-                frames[i][j] = in.readByte();
+                frames[i][j] = in.readInt();
             }
         }
     }
