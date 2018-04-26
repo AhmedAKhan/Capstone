@@ -1,0 +1,22 @@
+Steps For Configuring EMG Board
+
+NOTE: Orientation of the board should be so the word "Wiser" is right side up
+
+Update WiFi chip code:
+- Open "ESP8622_offline" in Arduino IDE
+- Change the SSID, Password, Static IP and Gateway to correct values in "ESP8622_offline" file
+- Plug in the power for the board
+- Connect the black, orange, yellow cable to computer
+	- On the board, the cable connects to the 3 pins right above the WiFi chip card. Labelled "GNU", "RX", "TX"
+	- Pin order starting from the left: Black, Orange, Yellow
+- Open Tools > Serial Monitor
+- Notice the text reads "...boot mode: (3,0)..."
+- In order to update the code on the WiFi chip, the Boot Mode has to be (1,6)
+	- Locate the two push buttons at the bottom of the board
+	- Press them in this order: Left, Right
+	- After about 1 second, release them in this order: Right, Left
+	- Notice in the Serial Monitor, the text "...boot mode: (1,6)..."
+- IMPORTANT: Remove the jumper from the two pins right beside the green LED
+- Upload the code from Arduino IDE
+- Once code is successfully updated, test if the board is connected to WiFi by "ping <static IP>" in command line
+- Put the jumper back on the 2 pins beside the green LED
