@@ -1,13 +1,15 @@
-package td.techjam.tangoclient;
+package td.techjam.tangoclient.network;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import td.techjam.tangoclient.model.GenericResponse;
+import td.techjam.tangoclient.model.SaveRequest;
 
 public class RestService {
 
-    // This URL will have to be changed every time since python server is currently running on localhost
-    private static final String BASE_URL = "http://9125174e.ngrok.io/";
+    // 10.0.2.2 is used for emulator to connect to localhost
+    private static final String BASE_URL = "http://ceceea29.ngrok.io/";
 
     private FlaskApi flaskApi;
 
@@ -24,6 +26,13 @@ public class RestService {
         callback.startLoading();
 
         Call<String> call = flaskApi.getTest();
+        call.enqueue(callback);
+    }
+
+    public void save(SaveRequest saveRequest, ServiceCallback<GenericResponse> callback) {
+        callback.startLoading();
+
+        Call<GenericResponse> call = flaskApi.postSave(saveRequest);
         call.enqueue(callback);
     }
 }
