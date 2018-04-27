@@ -1,5 +1,4 @@
-#SignTalk
-##A Sign Language Recognition System
+# SignTalk - A Sign Language Recognition System
 
 <p>Many people with a hearing disability rely on sign language to communicate. However, only a fraction of the world population understands this form of communication. Sign Language Recognition (SLR) is a method that allows such people to communicate with the society. The goal of this project is to develop an American Sign Language (ASL) recognition system by using two separate Machine Learning models and comparing their accuracies. One model is trained using surface Electromyography (sEMG) signals from the user's forearm and the other is trained using RGB-D (RGB with depth dimension) data. Due to limited resources, this project is only targeting 10 letters of the English alphabet as the gestures for these letters are very distinct and can be done with only one hand. Following are the letters used.</p>
 
