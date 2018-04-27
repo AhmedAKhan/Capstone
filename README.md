@@ -6,5 +6,5 @@
     A, B, D, G, I, L, N, P, V, W
 </p>
 
-<p>The data collection is done using two separate hardware. The sEMG data is collected using the XTREMIS Board, designed by WiSeR \cite{r3}. The RGB-D data is collected using the Tango Tablet via its Infra-Red (IR) sensors and Fish Eye camera. The two input sources are processed separately and the accuracy of each is compared.</p>
+<p>The data collection is done using two separate hardware. The sEMG data is collected using the XTREMIS Board, designed by WiSeR. The RGB-D data is collected using the Tango Tablet via its Infra-Red (IR) sensors and Fish Eye camera. The two input sources are processed separately and the accuracy of each is compared.</p>
 <p>Overall, the results of this project are expected to give an insight on advantages and disadvantages for the two input sources mentioned. The accuracy will be based on the number of correct predictions from the test data set.</p>
